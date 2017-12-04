@@ -35,21 +35,85 @@ class Client(object):
         domain,
         query,
         match_attrs={},
+        create_attrs={},
         create_threshold=None,
     ):
         if create_threshold:
             self.create_threshold = create_threshold
         query_field = list(query.keys())[0]
         data = {
-            "match_attrs": match_attrs,
             "query": {
                 "field": query_field,
                 "value": query[query_field]
-            }
+            },
+            "match_attrs": match_attrs,
+            "create_attrs": {
+                **query,
+                **match_attrs,
+                **create_attrs,
+            },
+            "create_threshold": create_threshold or self.create_threshold
         }
         r = requests.post(
-            os.path.join(self.service_address),
+            os.path.join(
+                self.service_address,
+                'best-match',
+                domain,
+            ) + os.path.sep,
             headers=self.headers,
             json=data
         )
         return r.json()
+
+    def create_domain(
+        self,
+        domain,
+    ):
+        data = {
+            "name": domain
+        }
+        r = requests.post(
+            os.path.join(
+                self.service_address,
+                'domains',
+            ) + os.path.sep,
+            headers=self.headers,
+            json=data
+        )
+        return r.json()
+
+    def delete_domain(
+        self,
+        domain,
+    ):
+        response = requests.delete(
+            os.path.join(
+                self.service_address,
+                'domains',
+                domain
+            ) + os.path.sep,
+            headers=self.headers,
+        )
+        return response
+
+    def bulk_create(
+        self,
+        domain,
+        entities,
+        force_bulk=False
+    ):
+        data = {
+            "domain": domain,
+            "entities": entities,
+            "force_bulk": force_bulk
+        }
+        r = requests.post(
+            os.path.join(
+                self.service_address,
+                'bulk-create',
+                domain,
+            ) + os.path.sep,
+            headers=self.headers,
+            json=data
+        )
+        return r
