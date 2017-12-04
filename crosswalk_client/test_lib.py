@@ -14,7 +14,8 @@ def test_misconfigured_config(token, service):
 
 def test_properly_configured_config(token, service):
     client = Client(token, service)
-    assert client.client_check() == requests.codes.ok
+    response = client.client_check()
+    assert response.status_code == requests.codes.ok
 
 
 def test_create_domain(token, service):

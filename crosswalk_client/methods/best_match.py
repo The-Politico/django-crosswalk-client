@@ -1,24 +1,11 @@
-import requests
 from urllib.parse import urljoin
-from .exceptions import ConfigError
-from .methods import ClientMethods
+
+import requests
+
+from crosswalk_client.exceptions import BadResponse
 
 
-class Client(ClientMethods):
-    def __init__(
-        self,
-        token,
-        service_address,
-        create_threshold=0.5,
-    ):
-        self.token = token
-        self.service_address = service_address
-        self.headers = {
-            'Authorization': 'TOKEN {}'.format(self.token)
-        }
-        self.create_threshold = create_threshold
-        self.client_check()
-
+class BestMatch(object):
     def best_match(
         self,
         domain,
@@ -43,7 +30,7 @@ class Client(ClientMethods):
             },
             "create_threshold": create_threshold or self.create_threshold
         }
-        r = requests.post(
+        response = requests.post(
             urljoin(
                 self.service_address,
                 'best-match/{}/'.format(domain),
@@ -51,4 +38,9 @@ class Client(ClientMethods):
             headers=self.headers,
             json=data
         )
-        return r.json()
+        if response.status_code != requests.codes.ok:
+            raise BadResponse(
+                'The service responded with a {} status code.'.format(
+                  response.status_code
+                ))
+        return response.json()
