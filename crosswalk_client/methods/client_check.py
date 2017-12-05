@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 
 import requests
 
-from .exceptions import ConfigError
+from crosswalk_client.exceptions import ConfigError
 
 
 class ClientCheck(object):

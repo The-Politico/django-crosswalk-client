@@ -1,7 +1,8 @@
 from urllib.parse import urljoin
-from crosswalk_client.exceptions import BadResponse
 
 import requests
+
+from crosswalk_client.exceptions import BadResponse
 
 
 class CreateDomain(object):
@@ -9,16 +10,21 @@ class CreateDomain(object):
     def create_domain(
         self,
         domain,
+        parent=None,
     ):
+        if parent:
+            data = {
+                "name": domain,
+                "parent": parent,
+            }
+        else:
+            data = {"name": domain}
         response = requests.post(
-            urljoin(
-                self.service_address,
-                'domains/',
-            ),
+            urljoin(self.service_address, 'domains/'),
             headers=self.headers,
-            json={"name": domain}
+            json=data
         )
-        if response.status_code != requests.codes.ok:
+        if response.status_code != 201:
             raise BadResponse(
                 'The service responded with a {} status code.'.format(
                   response.status_code

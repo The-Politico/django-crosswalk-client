@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 
 import requests
 
-from crosswalk_client.exceptions import BadResponse
+from crosswalk_client.exceptions import BadResponse, ProtectedError
 
 
 class DeleteDomain(object):
@@ -20,7 +20,11 @@ class DeleteDomain(object):
             ),
             headers=self.headers,
         )
-        if response.status_code != requests.codes.ok:
+        if response.status_code == 500:
+            raise ProtectedError(
+                'Could not delete domain. It may have protected entites.'
+            )
+        if response.status_code != 204:
             raise BadResponse(
                 'The service responded with a {} status code.'.format(
                   response.status_code
