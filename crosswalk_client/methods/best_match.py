@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from crosswalk_client.exceptions import BadResponse
+from crosswalk_client.methods.objectify import AttributeObject
 
 
 class BestMatch(object):
@@ -35,4 +36,4 @@ class BestMatch(object):
                 'The service responded with a {} status code. {}'.format(
                   response.status_code
                 ))
-        return response.json()
+        return AttributeObject(response.json())

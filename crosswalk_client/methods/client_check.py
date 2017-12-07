@@ -17,4 +17,4 @@ class ClientCheck(object):
                 'Client configuration error. Check that the token and service '
                 'address are correctly configured.'
             )
-        return response
+        return response.status_code == requests.codes.ok

@@ -29,4 +29,4 @@ class DeleteDomain(object):
                 'The service responded with a {} status code.'.format(
                   response.status_code
                 ))
-        return response
+        return response.status_code == 204

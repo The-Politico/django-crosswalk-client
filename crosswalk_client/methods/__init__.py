@@ -6,6 +6,7 @@ from .best_match import BestMatch
 from .set_domain import SetDomain
 from .list_domains import ListDomains
 from .best_match_or_create import BestMatchOrCreate
+from .delete_match import DeleteMatch
 
 
 class ClientMethods(
@@ -17,5 +18,6 @@ class ClientMethods(
     BestMatchOrCreate,
     SetDomain,
     ListDomains,
+    DeleteMatch,
 ):
     pass
