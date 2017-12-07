@@ -33,7 +33,8 @@ class BestMatch(object):
         )
         if response.status_code != requests.codes.ok:
             raise BadResponse(
-                'The service responded with a {} status code. {}'.format(
-                  response.status_code
+                'The service responded with a {}: {}'.format(
+                  response.status_code,
+                  response.json().get('message', 'No further detail.')
                 ))
         return AttributeObject(response.json())

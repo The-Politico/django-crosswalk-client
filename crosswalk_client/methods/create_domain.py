@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from crosswalk_client.exceptions import BadResponse
+from crosswalk_client.methods.objectify import AttributeObject
 
 
 class CreateDomain(object):
@@ -26,7 +27,8 @@ class CreateDomain(object):
         )
         if response.status_code != 201:
             raise BadResponse(
-                'The service responded with a {} status code.'.format(
-                  response.status_code
+                'The service responded with a {}: {}'.format(
+                  response.status_code,
+                  response.json().get('message', 'No further detail.')
                 ))
-        return response.json()
+        return AttributeObject(response.json())

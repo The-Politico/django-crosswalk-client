@@ -2,7 +2,8 @@ from urllib.parse import urljoin
 
 import requests
 
-from crosswalk_client.exceptions import BadResponse
+from crosswalk_client.exceptions import (BadResponse,
+                                         UnspecificDeleteRequestError)
 
 
 class DeleteMatch(object):
@@ -22,9 +23,14 @@ class DeleteMatch(object):
             headers=self.headers,
             json=data
         )
+        if response.status_code == 403:
+            raise UnspecificDeleteRequestError(
+                "Delete request matched more than one record."
+            )
         if response.status_code != 204:
             raise BadResponse(
-                'The service responded with a {} status code. {}'.format(
-                  response.status_code
+                'The service responded with a {}: {}'.format(
+                  response.status_code,
+                  response.json().get('message', 'No further detail.')
                 ))
         return response.status_code == 204

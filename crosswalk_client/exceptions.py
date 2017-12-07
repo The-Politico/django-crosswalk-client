@@ -11,5 +11,17 @@ class BadResponse(BaseError):
     pass
 
 
-class ProtectedError(BaseError):
+class ProtectedDomainError(BaseError):
+    pass
+
+
+class ProtectedEntitynError(BaseError):
+    pass
+
+
+class UnspecificDeleteRequestError(BaseError):
+    pass
+
+
+class CreateEntityError(BaseError):
     pass

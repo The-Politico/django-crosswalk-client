@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from crosswalk_client.exceptions import BadResponse
+from crosswalk_client.methods.objectify import AttributeObject
 
 
 class ListDomains(object):
@@ -16,7 +17,9 @@ class ListDomains(object):
         )
         if response.status_code != requests.codes.ok:
             raise BadResponse(
-                'The service responded with a {} status code.'.format(
-                  response.status_code
+                'The service responded with a {}: {}'.format(
+                  response.status_code,
+                  response.json().get('message', 'No further detail.')
                 ))
-        return response.json()
+        domains = response.json()
+        return [AttributeObject(domain) for domain in domains]
