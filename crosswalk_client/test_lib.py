@@ -90,7 +90,7 @@ def test_delete_protected_domain(token, service):
 def test_best_match(token, service):
     client = Client(token, service)
     client.set_domain('states')
-    entity = client.best_match({"name": "Mississipi"})
+    entity = client.best_match({"name": "Misisipi"})
     assert entity.name == "Mississippi"
 
 
@@ -134,6 +134,33 @@ def test_bad_domain_delete(token, service):
     client.set_domain('countries')
     with pytest.raises(BadResponse):
         client.delete_match({"country": "USA"})
+
+
+def test_create_alias(token, service):
+    client = Client(token, service)
+    client.set_domain('states')
+    entity = client.create_matched_alias(
+        {'name': 'Kalifornia'},
+        create_attrs={
+            "side": "west"
+        },
+        create_threshold=80
+    )
+    assert entity.name == 'California'
+
+
+def test_create_alias_without_match(token, service):
+    client = Client(token, service)
+    client.set_domain('states')
+    with pytest.raises(CreateEntityError):
+        client.create_matched_alias({'name': 'Zanado'}, create_threshold=80)
+
+
+def test_best_match_alias(token, service):
+    client = Client(token, service)
+    client.set_domain('states')
+    entity = client.best_match({"name": "Kalifornia"})
+    assert entity.name == "California"
 
 
 def test_cleanup_entities(token, service):

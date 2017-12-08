@@ -7,6 +7,7 @@ from .set_domain import SetDomain
 from .list_domains import ListDomains
 from .best_match_or_create import BestMatchOrCreate
 from .delete_match import DeleteMatch
+from .create_matched_alias import CreateMatchedAlias
 
 
 class ClientMethods(
@@ -19,5 +20,6 @@ class ClientMethods(
     SetDomain,
     ListDomains,
     DeleteMatch,
+    CreateMatchedAlias
 ):
     pass
