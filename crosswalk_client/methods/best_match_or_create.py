@@ -11,6 +11,7 @@ class BestMatchOrCreate(object):
         self,
         query,
         match_attrs={},
+        create_attrs={},
         domain=None,
         create_threshold=None
     ):
@@ -24,6 +25,7 @@ class BestMatchOrCreate(object):
             "query_value": query[query_field],
             "create_threshold": self.create_threshold,
             "match_attrs": match_attrs,
+            "create_attrs": create_attrs,
         }
         response = requests.post(
             urljoin(

@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from crosswalk_client.exceptions import BadResponse, CreateEntityError
+from crosswalk_client.methods.objectify import AttributeObject
 
 
 class BulkCreate(object):
@@ -38,4 +39,7 @@ class BulkCreate(object):
                   response.status_code,
                   response.json().get('message', 'No further detail.')
                 ))
-        return response.status_code == requests.codes.ok
+        return [
+            AttributeObject(entity)
+            for entity in response.json()['entities']
+        ]

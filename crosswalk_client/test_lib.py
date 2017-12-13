@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 import us
 
@@ -29,8 +31,8 @@ def test_create_domain(token, service):
 
 def test_list_domains(token, service):
     client = Client(token, service)
-    entities = client.list_domains()
-    assert entities[0].slug == "states"
+    domains = client.list_domains()
+    assert domains[0].slug == "states"
 
 
 def test_bulk_create(token, service):
@@ -45,8 +47,8 @@ def test_bulk_create(token, service):
         }
         for s in us.states.STATES
     ]
-    response = client.bulk_create(states, domain='states')
-    assert response is True
+    entities = client.bulk_create(states, domain='states')
+    assert entities[0].name == states[0]['name']
 
 
 def test_bulk_create_nested_entity(token, service):
@@ -55,7 +57,7 @@ def test_bulk_create_nested_entity(token, service):
         {
             "a": "bad entity",
             "nested": {
-                "too": "deep"
+                "too": "deeply"
             }
         }
     ]
@@ -68,7 +70,7 @@ def test_bulk_create_entity_with_reserved_attribute(token, service):
     entities = [
         {
             "a": "bad entity",
-            "created": "with a reserved key"
+            "created": "with a reserved key, 'created'"
         }
     ]
     with pytest.raises(CreateEntityError):
@@ -99,7 +101,7 @@ def test_best_match_with_matched_attrs(token, service):
     client.set_domain('states')
     entity = client.best_match(
         {"name": "Arkansas"},
-        {"postal_code": "KS"}
+        match_attrs={"postal_code": "KS"},
     )
     assert entity.name == "Kansas"
 
@@ -111,14 +113,29 @@ def test_best_match_or_create(token, service):
     client = Client(token, service)
     client.set_domain('states')
     entity = client.best_match_or_create(
-        {"name": "Narnia"}, create_threshold=75)
+        {"name": "Narnia"},
+        create_threshold=75,
+    )
     assert entity.created is True
+
+
+def test_best_match_or_create_with_uuid(token, service):
+    client = Client(token, service)
+    client.set_domain('states')
+    an_uuid = uuid.uuid4().hex
+    entity = client.best_match_or_create(
+        {"name": "Xanadu"},
+        create_attrs={"uuid": an_uuid},
+        create_threshold=75,
+    )
+    assert entity.uuid == an_uuid
 
 
 def test_delete(token, service):
     client = Client(token, service)
     client.set_domain('states')
     deleted = client.delete_match({"name": "Narnia"})
+    deleted = client.delete_match({"name": "Xanadu"})
     assert deleted is True
 
 
@@ -153,7 +170,10 @@ def test_create_alias_without_match(token, service):
     client = Client(token, service)
     client.set_domain('states')
     with pytest.raises(CreateEntityError):
-        client.create_matched_alias({'name': 'Zanado'}, create_threshold=80)
+        client.create_matched_alias(
+            {'name': 'Zanado'},
+            create_threshold=80,
+        )
 
 
 def test_best_match_alias(token, service):
