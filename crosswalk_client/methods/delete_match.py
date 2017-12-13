@@ -9,16 +9,16 @@ from crosswalk_client.exceptions import (BadResponse,
 class DeleteMatch(object):
     def delete_match(
         self,
-        match_attrs,
+        block_attrs,
         domain=None,
     ):
         if domain:
             self.domain = domain
-        data = match_attrs
+        data = block_attrs
         response = requests.post(
             urljoin(
                 self.service_address,
-                'delete-match/{}/'.format(self.domain),
+                'domains/{}/entities/delete-match/'.format(self.domain),
             ),
             headers=self.headers,
             json=data
@@ -31,6 +31,6 @@ class DeleteMatch(object):
             raise BadResponse(
                 'The service responded with a {}: {}'.format(
                   response.status_code,
-                  response.json().get('message', 'No further detail.')
+                  response.content,
                 ))
         return response.status_code == 204

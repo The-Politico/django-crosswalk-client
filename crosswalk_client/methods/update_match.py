@@ -2,39 +2,42 @@ from urllib.parse import urljoin
 
 import requests
 
-from crosswalk_client.exceptions import BadResponse
+from crosswalk_client.exceptions import (BadResponse,
+                                         UnspecificUpdateRequestError,
+                                         UpdateEntityError)
 from crosswalk_client.methods.objectify import AttributeObject
 
 
-class BestMatchOrCreate(object):
-    def best_match_or_create(
+class UpdateMatch(object):
+    """
+    Update a match.
+
+    Entites should be an array of attributes dicts.
+    """
+    def update_match(
         self,
-        query,
-        block_attrs={},
-        create_attrs={},
+        block_attrs,
+        update_attrs,
         domain=None,
-        create_threshold=None
     ):
         if domain:
             self.domain = domain
-        if create_threshold:
-            self.create_threshold = create_threshold
-        query_field = list(query.keys())[0]
         data = {
-            "query_field": query_field,
-            "query_value": query[query_field],
-            "create_threshold": self.create_threshold,
             "block_attrs": block_attrs,
-            "create_attrs": create_attrs,
+            "update_attrs": update_attrs,
         }
         response = requests.post(
             urljoin(
                 self.service_address,
-                'domains/{}/entities/best-match/'.format(self.domain),
+                'domains/{}/entities/update-match/'.format(self.domain),
             ),
             headers=self.headers,
             json=data
         )
+        if response.status_code == 403:
+            raise UnspecificUpdateRequestError(response.content)
+        if response.status_code == 400:
+            raise UpdateEntityError(response.content)
         if response.status_code != requests.codes.ok:
             raise BadResponse(
                 'The service responded with a {}: {}'.format(

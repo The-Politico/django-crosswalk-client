@@ -1,3 +1,13 @@
+def snake_case_keys(spaced_dict):
+    """
+    Converts keys in dict to snakecase.
+    """
+    return {
+        k.replace(' ', '_'): v
+        for k, v in spaced_dict.items()
+    }
+
+
 class AttributeObject(object):
     """
     Converts json returned form server into proper
@@ -7,7 +17,7 @@ class AttributeObject(object):
         entity = responseDict.pop('entity', {})
         attributes = entity.pop('attributes', {})
         self.__dict__ = {
-            **responseDict,
-            **entity,
-            **attributes
+            **snake_case_keys(responseDict),
+            **snake_case_keys(entity),
+            **snake_case_keys(attributes)
         }

@@ -6,12 +6,14 @@ from crosswalk_client.exceptions import BadResponse
 from crosswalk_client.methods.objectify import AttributeObject
 
 
-class ListDomains(object):
-    def list_domains(self):
+class GetEntities(object):
+    def get_entities(self, domain=None):
+        if domain:
+            self.domain = domain
         response = requests.get(
             urljoin(
                 self.service_address,
-                'domains/',
+                'domains/{}/entities/'.format(self.domain),
             ),
             headers=self.headers,
         )
@@ -19,7 +21,7 @@ class ListDomains(object):
             raise BadResponse(
                 'The service responded with a {}: {}'.format(
                   response.status_code,
-                  response.json().get('message', 'No further detail.')
+                  response.content,
                 ))
-        domains = response.json()
-        return [AttributeObject(domain) for domain in domains]
+        entities = response.json()
+        return [AttributeObject({"entity": entity}) for entity in entities]

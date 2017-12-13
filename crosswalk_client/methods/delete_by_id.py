@@ -2,28 +2,24 @@ from urllib.parse import urljoin
 
 import requests
 
-from crosswalk_client.exceptions import BadResponse, ProtectedDomainError
+from crosswalk_client.exceptions import BadResponse
 
 
-class DeleteDomain(object):
+class DeleteById(object):
     """
-    Delete a domain.
+    Delete an entity.
     """
-    def delete_domain(
+    def delete_by_id(
         self,
-        domain,
+        uuid
     ):
         response = requests.delete(
             urljoin(
                 self.service_address,
-                'domains/{}/'.format(domain),
+                'entities/{}/'.format(uuid),
             ),
             headers=self.headers,
         )
-        if response.status_code == 500:
-            raise ProtectedDomainError(
-                'Could not delete domain. It may have protected entites.'
-            )
         if response.status_code != 204:
             raise BadResponse(
                 'The service responded with a {}: {}'.format(

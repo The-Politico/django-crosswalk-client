@@ -29,6 +29,6 @@ class CreateDomain(object):
             raise BadResponse(
                 'The service responded with a {}: {}'.format(
                   response.status_code,
-                  response.json().get('message', 'No further detail.')
+                  response.content,
                 ))
         return AttributeObject(response.json())
