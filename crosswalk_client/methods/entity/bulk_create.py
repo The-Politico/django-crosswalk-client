@@ -17,12 +17,12 @@ class BulkCreate(object):
         entities,
         domain=None,
     ):
-        if domain:
-            self.domain = domain
+        if domain is None:
+            domain = self.domain
         response = requests.post(
             urljoin(
                 self.service_address,
-                'domains/{}/entities/bulk-create/'.format(self.domain),
+                'domains/{}/entities/bulk-create/'.format(domain),
             ),
             headers=self.headers,
             json=entities

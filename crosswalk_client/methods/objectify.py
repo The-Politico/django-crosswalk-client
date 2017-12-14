@@ -3,7 +3,7 @@ def snake_case_keys(spaced_dict):
     Converts keys in dict to snakecase.
     """
     return {
-        k.replace(' ', '_'): v
+        k.replace(' ', '_').replace('-', '_'): v
         for k, v in spaced_dict.items()
     }
 

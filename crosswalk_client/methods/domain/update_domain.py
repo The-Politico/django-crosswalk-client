@@ -6,22 +6,27 @@ from crosswalk_client.exceptions import BadResponse
 from crosswalk_client.methods.objectify import AttributeObject
 
 
-class GetEntities(object):
-    def get_entities(self, domain=None):
-        if domain:
-            self.domain = domain
-        response = requests.get(
+class UpdateDomain(object):
+    """
+    Update a domain.
+    """
+    def update_domain(
+        self,
+        slug,
+        update,
+    ):
+        response = requests.patch(
             urljoin(
                 self.service_address,
-                'domains/{}/entities/'.format(self.domain),
+                'domains/{}/'.format(slug),
             ),
             headers=self.headers,
+            json=update
         )
-        if response.status_code != requests.codes.ok:
+        if response.status_code != 200:
             raise BadResponse(
                 'The service responded with a {}: {}'.format(
                   response.status_code,
                   response.content,
                 ))
-        entities = response.json()
-        return [AttributeObject({"entity": entity}) for entity in entities]
+        return AttributeObject(response.json())

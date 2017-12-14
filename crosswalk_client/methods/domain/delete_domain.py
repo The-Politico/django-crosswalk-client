@@ -11,12 +11,12 @@ class DeleteDomain(object):
     """
     def delete_domain(
         self,
-        domain,
+        slug,
     ):
         response = requests.delete(
             urljoin(
                 self.service_address,
-                'domains/{}/'.format(domain),
+                'domains/{}/'.format(slug),
             ),
             headers=self.headers,
         )

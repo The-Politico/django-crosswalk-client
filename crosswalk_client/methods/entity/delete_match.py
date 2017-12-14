@@ -12,13 +12,13 @@ class DeleteMatch(object):
         block_attrs,
         domain=None,
     ):
-        if domain:
-            self.domain = domain
+        if domain is None:
+            domain = self.domain
         data = block_attrs
         response = requests.post(
             urljoin(
                 self.service_address,
-                'domains/{}/entities/delete-match/'.format(self.domain),
+                'domains/{}/entities/delete-match/'.format(domain),
             ),
             headers=self.headers,
             json=data

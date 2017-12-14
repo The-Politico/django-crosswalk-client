@@ -20,8 +20,8 @@ class UpdateMatch(object):
         update_attrs,
         domain=None,
     ):
-        if domain:
-            self.domain = domain
+        if domain is None:
+            domain = self.domain
         data = {
             "block_attrs": block_attrs,
             "update_attrs": update_attrs,
@@ -29,7 +29,7 @@ class UpdateMatch(object):
         response = requests.post(
             urljoin(
                 self.service_address,
-                'domains/{}/entities/update-match/'.format(self.domain),
+                'domains/{}/entities/update-match/'.format(domain),
             ),
             headers=self.headers,
             json=data
