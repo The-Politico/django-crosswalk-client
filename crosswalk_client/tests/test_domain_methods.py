@@ -9,14 +9,17 @@ def test_create_domain(token, service):
     domain = client.create_domain("states")
     assert domain.name == "states"
 
-    response = client.create_domain("counties", parent="states")
-    assert response.name == "counties"
+    domain = client.create_domain("counties", parent="states")
+    assert domain.name == "counties" and domain.parent == "states"
 
 
 def test_update_domain(token, service):
     client = Client(token, service)
-    domain = client.update_domain("counties", {"name": "kounties"})
-    assert domain.name == "kounties"
+    domain = client.update_domain(
+        "counties",
+        {"name": "kounties", "parent": None}
+    )
+    assert domain.name == "kounties" and domain.parent is None
 
 
 def test_get_domains(token, service):
