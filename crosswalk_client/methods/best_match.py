@@ -12,9 +12,12 @@ class BestMatch(object):
         query,
         block_attrs={},
         domain=None,
+        scorer=None,
     ):
         if domain:
             self.domain = domain
+        if scorer:
+            self.scorer = scorer
         query_field = list(query.keys())[0]
         data = {
             **block_attrs,

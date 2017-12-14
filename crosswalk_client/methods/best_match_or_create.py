@@ -13,12 +13,15 @@ class BestMatchOrCreate(object):
         block_attrs={},
         create_attrs={},
         domain=None,
-        create_threshold=None
+        create_threshold=None,
+        scorer=None,
     ):
         if domain:
             self.domain = domain
         if create_threshold:
             self.create_threshold = create_threshold
+        if scorer:
+            self.scorer = scorer
         query_field = list(query.keys())[0]
         data = {
             "query_field": query_field,

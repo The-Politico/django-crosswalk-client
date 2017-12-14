@@ -8,6 +8,7 @@ class Client(ClientMethods):
         service_address,
         domain=None,
         create_threshold=80,
+        scorer='crosswalk.scorers.fuzzywuzzy.default_process',
     ):
         self.token = token
         self.service_address = service_address
@@ -16,4 +17,5 @@ class Client(ClientMethods):
         }
         self.domain = domain
         self.create_threshold = create_threshold
+        self.scorer = scorer
         self.client_check()

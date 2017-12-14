@@ -12,6 +12,7 @@ from .get_entities import GetEntities
 from .delete_by_id import DeleteById
 from .update_by_id import UpdateById
 from .update_match import UpdateMatch
+from .set_scorer import SetScorer
 
 
 class ClientMethods(
@@ -21,6 +22,7 @@ class ClientMethods(
     CreateDomain,
     BestMatch,
     BestMatchOrCreate,
+    SetScorer,
     SetDomain,
     GetDomains,
     GetEntities,
