@@ -12,8 +12,8 @@ class GetEntities(object):
     @validate_domain
     def get_entities(
         self,
-        block_attrs: dict = {},
-        domain: str = None,
+        block_attrs={},
+        domain=None,
     ):
         if domain is None:
             domain = self.domain

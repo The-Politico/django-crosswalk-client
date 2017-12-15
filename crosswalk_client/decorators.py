@@ -90,3 +90,8 @@ def validate_threshold(function):
             raise MalformedThreshold("Threshold should be between 0 and 100.")
         return function(*args, **kwargs)
     return wrapper
+
+
+# TODO
+def validate_uuid(function):
+    pass

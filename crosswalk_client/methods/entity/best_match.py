@@ -1,4 +1,3 @@
-from typing import Dict
 from urllib.parse import urljoin
 
 import requests
@@ -15,10 +14,10 @@ class BestMatch(object):
     @validate_domain
     def best_match(
         self,
-        query: Dict[str, str],
-        block_attrs: dict = {},
-        domain: str = None,
-        scorer: str = None,
+        query,
+        block_attrs={},
+        domain=None,
+        scorer=None,
     ):
         if domain is None:
             domain = self.domain

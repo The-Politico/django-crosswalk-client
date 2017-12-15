@@ -14,8 +14,8 @@ class UpdateById(object):
     @validate_update_attrs
     def update_by_id(
         self,
-        uuid: str,
-        update_attrs: dict,
+        uuid,
+        update_attrs,
     ):
         if not isinstance(update_attrs, dict):
             raise BadRequest(

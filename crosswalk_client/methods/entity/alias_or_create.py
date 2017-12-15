@@ -1,4 +1,3 @@
-from typing import Dict
 from urllib.parse import urljoin
 
 import requests
@@ -19,11 +18,11 @@ class AliasOrCreate(object):
     @validate_threshold
     def alias_or_create(
         self,
-        query: Dict[str, str],
-        block_attrs: dict = {},
-        create_attrs: dict = {},
-        domain: str = None,
-        threshold: int = None
+        query,
+        block_attrs={},
+        create_attrs={},
+        domain=None,
+        threshold=None
     ):
         if domain is None:
             domain = self.domain

@@ -1,4 +1,3 @@
-from typing import Dict
 from urllib.parse import urljoin
 
 import requests
@@ -19,12 +18,12 @@ class BestMatchOrCreate(object):
     @validate_threshold
     def best_match_or_create(
         self,
-        query: Dict[str, str],
-        block_attrs: dict = {},
-        create_attrs: dict = {},
-        domain: str = None,
-        threshold: int = None,
-        scorer: str = None,
+        query,
+        block_attrs={},
+        create_attrs={},
+        domain=None,
+        threshold=None,
+        scorer=None,
     ):
         if domain is None:
             domain = self.domain

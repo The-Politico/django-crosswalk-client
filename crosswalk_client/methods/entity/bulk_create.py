@@ -16,8 +16,8 @@ class BulkCreate(object):
     @validate_domain
     def bulk_create(
         self,
-        entities: list,
-        domain: str = None,
+        entities,
+        domain=None,
     ):
         if domain is None:
             domain = self.domain

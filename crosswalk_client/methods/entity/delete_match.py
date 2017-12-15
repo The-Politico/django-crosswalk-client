@@ -12,8 +12,8 @@ class DeleteMatch(object):
     @validate_domain
     def delete_match(
         self,
-        block_attrs: dict,
-        domain: str = None,
+        block_attrs,
+        domain=None,
     ):
         if not isinstance(block_attrs, dict):
             raise BadRequest(

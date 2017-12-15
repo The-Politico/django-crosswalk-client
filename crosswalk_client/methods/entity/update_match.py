@@ -21,9 +21,9 @@ class UpdateMatch(object):
     @validate_domain
     def update_match(
         self,
-        block_attrs: dict,
-        update_attrs: dict,
-        domain: str = None,
+        block_attrs,
+        update_attrs,
+        domain=None,
     ):
         if not isinstance(update_attrs, dict):
             raise BadRequest(
