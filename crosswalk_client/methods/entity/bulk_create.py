@@ -14,8 +14,8 @@ class BulkCreate(object):
     """
     def bulk_create(
         self,
-        entities,
-        domain=None,
+        entities: list,
+        domain: str = None,
     ):
         if domain is None:
             domain = self.domain

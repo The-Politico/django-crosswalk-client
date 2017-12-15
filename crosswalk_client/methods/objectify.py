@@ -13,7 +13,7 @@ class AttributeObject(object):
     Converts json returned form server into proper
     objects for entities and domains.
     """
-    def __init__(self, responseDict):
+    def __init__(self, responseDict: dict):
         entity = responseDict.pop('entity', {})
         attributes = entity.pop('attributes', {})
         self.__dict__ = {

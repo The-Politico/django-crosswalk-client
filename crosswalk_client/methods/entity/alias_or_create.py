@@ -1,3 +1,4 @@
+from typing import Dict
 from urllib.parse import urljoin
 
 import requests
@@ -6,14 +7,14 @@ from crosswalk_client.exceptions import BadResponse, CreateEntityError
 from crosswalk_client.methods.objectify import AttributeObject
 
 
-class CreateMatchedAlias(object):
-    def create_matched_alias(
+class AliasOrCreate(object):
+    def alias_or_create(
         self,
-        query,
-        block_attrs={},
-        create_attrs={},
-        domain=None,
-        threshold=None
+        query: Dict[str, str],
+        block_attrs: dict = {},
+        create_attrs: dict = {},
+        domain: str = None,
+        threshold: str = None
     ):
         if domain is None:
             domain = self.domain
@@ -30,7 +31,7 @@ class CreateMatchedAlias(object):
         response = requests.post(
             urljoin(
                 self.service_address,
-                'domains/{}/entities/create-matched-alias/'.format(domain),
+                'domains/{}/entities/alias-or-create/'.format(domain),
             ),
             headers=self.headers,
             json=data

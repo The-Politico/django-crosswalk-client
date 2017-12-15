@@ -1,3 +1,4 @@
+from typing import Dict
 from urllib.parse import urljoin
 
 import requests
@@ -9,10 +10,10 @@ from crosswalk_client.methods.objectify import AttributeObject
 class BestMatch(object):
     def best_match(
         self,
-        query,
-        block_attrs={},
-        domain=None,
-        scorer=None,
+        query: Dict[str, str],
+        block_attrs: dict = {},
+        domain: str = None,
+        scorer: str = None,
     ):
         if domain is None:
             domain = self.domain

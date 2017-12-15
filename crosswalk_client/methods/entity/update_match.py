@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 
 import requests
 
-from crosswalk_client.exceptions import (BadResponse,
+from crosswalk_client.exceptions import (BadRequest, BadResponse,
                                          UnspecificUpdateRequestError,
                                          UpdateEntityError)
 from crosswalk_client.methods.objectify import AttributeObject
@@ -16,10 +16,18 @@ class UpdateMatch(object):
     """
     def update_match(
         self,
-        block_attrs,
-        update_attrs,
-        domain=None,
+        block_attrs: dict,
+        update_attrs: dict,
+        domain: str = None,
     ):
+        if not isinstance(update_attrs, dict):
+            raise BadRequest(
+                'update_attrs must be a dictionary of attributes.'
+            )
+        if not isinstance(block_attrs, dict):
+            raise BadRequest(
+                'block_attrs must be a dictionary of attributes.'
+            )
         if domain is None:
             domain = self.domain
         data = {

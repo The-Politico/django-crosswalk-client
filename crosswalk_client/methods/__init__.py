@@ -12,7 +12,7 @@ from .entity.bulk_create import BulkCreate
 from .entity.best_match import BestMatch
 from .entity.best_match_or_create import BestMatchOrCreate
 from .entity.delete_match import DeleteMatch
-from .entity.create_matched_alias import CreateMatchedAlias
+from .entity.alias_or_create import AliasOrCreate
 from .entity.get_entities import GetEntities
 from .entity.delete_by_id import DeleteById
 from .entity.update_by_id import UpdateById
@@ -32,7 +32,7 @@ class ClientMethods(
     GetDomains,
     GetEntities,
     DeleteMatch,
-    CreateMatchedAlias,
+    AliasOrCreate,
     DeleteById,
     UpdateById,
     UpdateMatch,

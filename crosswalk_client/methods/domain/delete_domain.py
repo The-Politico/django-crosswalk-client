@@ -11,7 +11,7 @@ class DeleteDomain(object):
     """
     def delete_domain(
         self,
-        slug,
+        slug: str,
     ):
         response = requests.delete(
             urljoin(

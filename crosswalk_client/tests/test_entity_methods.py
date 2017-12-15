@@ -20,8 +20,6 @@ def test_bulk_create(token, service):
     states = [
         {
             "name": s.name,
-            "ap_abbreviation": s.ap_abbr,
-            "fips": s.fips,
             "postal_code": s.abbr,
             "country": "USA"
         }
@@ -81,7 +79,7 @@ def test_best_match_or_create(token, service):
         {"name": "Narnia"},
         threshold=75,
     )
-    assert entity.created is True
+    assert entity.created is True and entity.name == "Narnia"
 
 
 def test_best_match_or_create_with_uuid(token, service):
@@ -165,25 +163,22 @@ def test_bad_domain_delete_error(token, service):
         client.delete_match({"country": "USA"})
 
 
-def test_create_alias(token, service):
+def test_create_or_alias_creates_alias(token, service):
     client = Client(token, service, domain="states")
-    entity = client.create_matched_alias(
-        {"name": "Kalifornia"},
-        create_attrs={
-            "side": "west"
-        },
-        threshold=80
-    )
-    assert entity.name == "California"
+    entity = client.alias_or_create({"name": "Kalifornia"})
+    assert entity.name == "California" and entity.aliased is True
 
 
-def test_create_alias_without_match_error(token, service):
+def test_create_or_alias_creates_new(token, service):
     client = Client(token, service, domain="states")
-    with pytest.raises(CreateEntityError):
-        client.create_matched_alias(
-            {"name": "Zanado"},
-            threshold=80,
-        )
+    entity = client.alias_or_create({"name": "Alderaan"}, threshold=90)
+    assert entity.name == "Alderaan" and entity.aliased is False
+
+
+def test_create_or_alias_fails_on_existing_entity(token, service):
+    client = Client(token, service, domain="states")
+    with pytest.raises(BadResponse):
+        client.alias_or_create({"name": "Alderaan"})
 
 
 def test_best_match_alias(token, service):
@@ -196,4 +191,5 @@ def test_cleanup(token, service):
     client = Client(token, service, domain="states")
     for state in us.states.STATES:
         client.delete_match({"name": state.name})
+    client.delete_match({"name": "Alderaan"})
     client.delete_domain("states")

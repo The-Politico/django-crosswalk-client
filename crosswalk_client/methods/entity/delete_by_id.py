@@ -11,7 +11,7 @@ class DeleteById(object):
     """
     def delete_by_id(
         self,
-        uuid
+        uuid: str
     ):
         response = requests.delete(
             urljoin(

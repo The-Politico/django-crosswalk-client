@@ -10,8 +10,8 @@ class CreateDomain(object):
     """ Create a domain. """
     def create_domain(
         self,
-        domain,
-        parent=None,
+        domain: str,
+        parent: str = None,
     ):
         if parent:
             data = {

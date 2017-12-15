@@ -12,8 +12,8 @@ class UpdateDomain(object):
     """
     def update_domain(
         self,
-        slug,
-        update,
+        slug: str,
+        update: dict,
     ):
         response = requests.patch(
             urljoin(

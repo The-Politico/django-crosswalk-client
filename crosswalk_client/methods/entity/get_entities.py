@@ -7,7 +7,7 @@ from crosswalk_client.methods.objectify import AttributeObject
 
 
 class GetEntities(object):
-    def get_entities(self, domain=None):
+    def get_entities(self, domain: str = None):
         if domain is None:
             domain = self.domain
         response = requests.get(
