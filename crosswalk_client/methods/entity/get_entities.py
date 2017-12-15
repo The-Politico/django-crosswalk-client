@@ -2,12 +2,19 @@ from urllib.parse import urljoin
 
 import requests
 
+from crosswalk_client.decorators import validate_block_attrs, validate_domain
 from crosswalk_client.exceptions import BadResponse
 from crosswalk_client.methods.objectify import AttributeObject
 
 
 class GetEntities(object):
-    def get_entities(self, domain: str = None):
+    @validate_block_attrs
+    @validate_domain
+    def get_entities(
+        self,
+        block_attrs: dict = {},
+        domain: str = None,
+    ):
         if domain is None:
             domain = self.domain
         response = requests.get(
@@ -16,6 +23,7 @@ class GetEntities(object):
                 'domains/{}/entities/'.format(domain),
             ),
             headers=self.headers,
+            params=block_attrs
         )
         if response.status_code != requests.codes.ok:
             raise BadResponse(

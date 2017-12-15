@@ -2,6 +2,7 @@ from urllib.parse import urljoin
 
 import requests
 
+from crosswalk_client.decorators import validate_domain
 from crosswalk_client.exceptions import BadResponse, CreateEntityError
 from crosswalk_client.methods.objectify import AttributeObject
 
@@ -12,6 +13,7 @@ class BulkCreate(object):
 
     Entites should be an array of attributes dicts.
     """
+    @validate_domain
     def bulk_create(
         self,
         entities: list,

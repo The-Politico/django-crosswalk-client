@@ -2,11 +2,14 @@ from urllib.parse import urljoin
 
 import requests
 
+from crosswalk_client.decorators import validate_block_attrs, validate_domain
 from crosswalk_client.exceptions import (BadRequest, BadResponse,
                                          UnspecificDeleteRequestError)
 
 
 class DeleteMatch(object):
+    @validate_block_attrs
+    @validate_domain
     def delete_match(
         self,
         block_attrs: dict,

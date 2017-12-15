@@ -2,6 +2,7 @@ from urllib.parse import urljoin
 
 import requests
 
+from crosswalk_client.decorators import validate_update_attrs
 from crosswalk_client.exceptions import BadRequest, BadResponse
 from crosswalk_client.methods.objectify import AttributeObject
 
@@ -10,6 +11,7 @@ class UpdateById(object):
     """
     Delete an entity.
     """
+    @validate_update_attrs
     def update_by_id(
         self,
         uuid: str,

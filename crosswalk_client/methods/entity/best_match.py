@@ -3,11 +3,16 @@ from urllib.parse import urljoin
 
 import requests
 
+from crosswalk_client.decorators import (validate_block_attrs, validate_domain,
+                                         validate_query)
 from crosswalk_client.exceptions import BadResponse
 from crosswalk_client.methods.objectify import AttributeObject
 
 
 class BestMatch(object):
+    @validate_query
+    @validate_block_attrs
+    @validate_domain
     def best_match(
         self,
         query: Dict[str, str],

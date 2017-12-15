@@ -99,6 +99,15 @@ def test_get_entities(token, service):
     assert entities[0].name is not None
 
 
+def test_get_entities_with_block_attrs(token, service):
+    client = Client(token, service, domain="states")
+    entities = client.get_entities(block_attrs={"country": "USA"})
+    assert len(entities) == 51
+
+    entities = client.get_entities(block_attrs={"postal_code": "KS"})
+    assert entities[0].name == "Kansas"
+
+
 def test_update_entity_by_id(token, service):
     client = Client(token, service, domain="states")
     entity = client.best_match({"name": "Xanadu"})
@@ -171,17 +180,24 @@ def test_create_or_alias_creates_alias(token, service):
 
 def test_create_or_alias_creates_new(token, service):
     client = Client(token, service, domain="states")
-    entity = client.alias_or_create({"name": "Alderaan"}, threshold=90)
+    entity = client.alias_or_create(
+        {"name": "Alderaan"},
+        create_attrs={"galaxy": "Far, far away"},
+        threshold=90,
+    )
     assert entity.name == "Alderaan" and entity.aliased is False
 
 
 def test_create_or_alias_fails_on_existing_entity(token, service):
     client = Client(token, service, domain="states")
     with pytest.raises(BadResponse):
-        client.alias_or_create({"name": "Alderaan"})
+        client.alias_or_create(
+            {"name": "Alderaan"},
+            create_attrs={"galaxy": "Far, far away"}
+        )
 
 
-def test_best_match_alias(token, service):
+def test_best_match_an_alias(token, service):
     client = Client(token, service, domain="states")
     entity = client.best_match({"name": "Kalifornia"})
     assert entity.name == "California"

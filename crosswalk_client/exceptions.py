@@ -15,6 +15,34 @@ class BadRequest(BaseError):
     pass
 
 
+class MalformedQuery(BaseError):
+    pass
+
+
+class MalformedBlockAttributes(BaseError):
+    pass
+
+
+class MalformedCreateAttributes(BaseError):
+    pass
+
+
+class MalformedUpdateAttributes(BaseError):
+    pass
+
+
+class MalformedThreshold(BaseError):
+    pass
+
+
+class MissingDomain(BaseError):
+    pass
+
+
+class MalformedDomain(BaseError):
+    pass
+
+
 class ProtectedDomainError(BaseError):
     pass
 

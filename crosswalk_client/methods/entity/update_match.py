@@ -2,6 +2,8 @@ from urllib.parse import urljoin
 
 import requests
 
+from crosswalk_client.decorators import (validate_block_attrs, validate_domain,
+                                         validate_update_attrs)
 from crosswalk_client.exceptions import (BadRequest, BadResponse,
                                          UnspecificUpdateRequestError,
                                          UpdateEntityError)
@@ -14,6 +16,9 @@ class UpdateMatch(object):
 
     Entites should be an array of attributes dicts.
     """
+    @validate_block_attrs
+    @validate_update_attrs
+    @validate_domain
     def update_match(
         self,
         block_attrs: dict,

@@ -3,18 +3,27 @@ from urllib.parse import urljoin
 
 import requests
 
+from crosswalk_client.decorators import (validate_block_attrs,
+                                         validate_create_attrs,
+                                         validate_domain, validate_query,
+                                         validate_threshold)
 from crosswalk_client.exceptions import BadResponse, CreateEntityError
 from crosswalk_client.methods.objectify import AttributeObject
 
 
 class AliasOrCreate(object):
+    @validate_query
+    @validate_block_attrs
+    @validate_create_attrs
+    @validate_domain
+    @validate_threshold
     def alias_or_create(
         self,
         query: Dict[str, str],
         block_attrs: dict = {},
         create_attrs: dict = {},
         domain: str = None,
-        threshold: str = None
+        threshold: int = None
     ):
         if domain is None:
             domain = self.domain
