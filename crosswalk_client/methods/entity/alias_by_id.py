@@ -2,29 +2,29 @@ from urllib.parse import urljoin
 
 import requests
 
-from crosswalk_client.decorators import validate_update_attrs, validate_uuid
+from crosswalk_client.decorators import validate_target_uuid, validate_uuid
 from crosswalk_client.exceptions import BadResponse
 from crosswalk_client.objects.entity import EntityObject
 
 
-class UpdateById(object):
+class AliasById(object):
     """
-    Update an entity.
+    Alias an entity.
     """
     @validate_uuid
-    @validate_update_attrs
-    def update_by_id(
+    @validate_target_uuid
+    def alias_by_id(
         self,
-        uuid,
-        update_attrs,
+        alias_uuid,
+        alias_for_uuid,
     ):
         response = requests.patch(
             urljoin(
                 self.service_address,
-                'entities/{}/'.format(uuid),
+                'entities/{}/'.format(alias_uuid),
             ),
             headers=self.headers,
-            json={"attributes": update_attrs}
+            json={"alias_for": alias_for_uuid}
         )
         if response.status_code != requests.codes.ok:
             raise BadResponse(

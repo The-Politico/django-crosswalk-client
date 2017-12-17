@@ -3,15 +3,15 @@ from urllib.parse import urljoin
 import requests
 
 from crosswalk_client.exceptions import BadResponse
-from crosswalk_client.methods.objectify import AttributeObject
+from crosswalk_client.objects.domain import DomainObject
 
 
 class CreateDomain(object):
     """ Create a domain. """
     def create_domain(
         self,
-        domain: str,
-        parent: str = None,
+        domain,
+        parent=None,
     ):
         if parent:
             data = {
@@ -31,4 +31,4 @@ class CreateDomain(object):
                   response.status_code,
                   response.content,
                 ))
-        return AttributeObject(response.json())
+        return DomainObject(response.json(), client=self)

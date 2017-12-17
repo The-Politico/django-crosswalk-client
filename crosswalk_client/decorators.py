@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from slugify import slugify
 
 from crosswalk_client.exceptions import (MalformedBlockAttributes,
@@ -5,7 +7,7 @@ from crosswalk_client.exceptions import (MalformedBlockAttributes,
                                          MalformedDomain, MalformedQuery,
                                          MalformedThreshold,
                                          MalformedUpdateAttributes,
-                                         MissingDomain)
+                                         MalformedUUID, MissingDomain)
 
 
 def validate_query(function):
@@ -92,6 +94,28 @@ def validate_threshold(function):
     return wrapper
 
 
-# TODO
 def validate_uuid(function):
-    pass
+    def wrapper(*args, **kwargs):
+        uuid_string = args[1]
+        try:
+            UUID(uuid_string, version=4)
+        except ValueError:
+            raise MalformedUUID("Invalid UUID.")
+        return function(*args, **kwargs)
+    return wrapper
+
+
+def validate_target_uuid(function):
+    """
+    Target UUIDs are used to set foreign keys and should be either a valid UUID
+    or None to unset the froeign key.
+    """
+    def wrapper(*args, **kwargs):
+        uuid_string = args[2]
+        try:
+            if uuid_string is not None:
+                UUID(uuid_string, version=4)
+        except ValueError:
+            raise MalformedUUID("Invalid UUID for target.")
+        return function(*args, **kwargs)
+    return wrapper

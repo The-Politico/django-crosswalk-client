@@ -7,7 +7,7 @@ from crosswalk_client.decorators import (validate_block_attrs,
                                          validate_domain, validate_query,
                                          validate_threshold)
 from crosswalk_client.exceptions import BadResponse
-from crosswalk_client.methods.objectify import AttributeObject
+from crosswalk_client.objects.entity import EntityObject
 
 
 class BestMatchOrCreate(object):
@@ -24,6 +24,7 @@ class BestMatchOrCreate(object):
         domain=None,
         threshold=None,
         scorer=None,
+        return_canonical=True,
     ):
         if domain is None:
             domain = self.domain
@@ -39,11 +40,12 @@ class BestMatchOrCreate(object):
             "block_attrs": block_attrs,
             "create_attrs": create_attrs,
             "scorer": scorer,
+            "return_canonical": return_canonical,
         }
         response = requests.post(
             urljoin(
                 self.service_address,
-                'domains/{}/entities/best-match/'.format(domain),
+                'domains/{}/entities/best-match-or-create/'.format(domain),
             ),
             headers=self.headers,
             json=data
@@ -54,4 +56,4 @@ class BestMatchOrCreate(object):
                   response.status_code,
                   response.content,
                 ))
-        return AttributeObject(response.json())
+        return EntityObject(response.json(), client=self)

@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from crosswalk_client.exceptions import BadResponse
-from crosswalk_client.methods.objectify import AttributeObject
+from crosswalk_client.objects.domain import DomainObject
 
 
 class UpdateDomain(object):
@@ -12,8 +12,8 @@ class UpdateDomain(object):
     """
     def update_domain(
         self,
-        slug: str,
-        update: dict,
+        slug,
+        update_attrs,
     ):
         response = requests.patch(
             urljoin(
@@ -21,7 +21,7 @@ class UpdateDomain(object):
                 'domains/{}/'.format(slug),
             ),
             headers=self.headers,
-            json=update
+            json=update_attrs
         )
         if response.status_code != 200:
             raise BadResponse(
@@ -29,4 +29,4 @@ class UpdateDomain(object):
                   response.status_code,
                   response.content,
                 ))
-        return AttributeObject(response.json())
+        return DomainObject(response.json(), client=self)

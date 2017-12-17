@@ -7,7 +7,7 @@ from crosswalk_client.decorators import (validate_block_attrs,
                                          validate_domain, validate_query,
                                          validate_threshold)
 from crosswalk_client.exceptions import BadResponse, CreateEntityError
-from crosswalk_client.methods.objectify import AttributeObject
+from crosswalk_client.objects.entity import EntityObject
 
 
 class AliasOrCreate(object):
@@ -22,7 +22,8 @@ class AliasOrCreate(object):
         block_attrs={},
         create_attrs={},
         domain=None,
-        threshold=None
+        threshold=None,
+        return_canonical=True,
     ):
         if domain is None:
             domain = self.domain
@@ -35,6 +36,7 @@ class AliasOrCreate(object):
             "threshold": threshold,
             "block_attrs": block_attrs,
             "create_attrs": create_attrs,
+            "return_canonical": return_canonical,
         }
         response = requests.post(
             urljoin(
@@ -56,4 +58,4 @@ class AliasOrCreate(object):
                   response.status_code,
                   response.content,
                 ))
-        return AttributeObject(response.json())
+        return EntityObject(response.json(), client=self)

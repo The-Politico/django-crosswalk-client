@@ -43,6 +43,10 @@ class MalformedDomain(BaseError):
     pass
 
 
+class MalformedUUID(BaseError):
+    pass
+
+
 class ProtectedDomainError(BaseError):
     pass
 

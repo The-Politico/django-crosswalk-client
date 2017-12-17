@@ -4,7 +4,7 @@ import requests
 
 from crosswalk_client.decorators import validate_block_attrs, validate_domain
 from crosswalk_client.exceptions import BadResponse
-from crosswalk_client.methods.objectify import AttributeObject
+from crosswalk_client.objects.entity import EntityObject
 
 
 class GetEntities(object):
@@ -32,4 +32,7 @@ class GetEntities(object):
                   response.content,
                 ))
         entities = response.json()
-        return [AttributeObject({"entity": entity}) for entity in entities]
+        return [
+            EntityObject({"entity": entity}, client=self)
+            for entity in entities
+        ]

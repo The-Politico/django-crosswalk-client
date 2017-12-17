@@ -4,7 +4,7 @@ import requests
 
 from crosswalk_client.decorators import validate_domain
 from crosswalk_client.exceptions import BadResponse, CreateEntityError
-from crosswalk_client.methods.objectify import AttributeObject
+from crosswalk_client.objects.entity import EntityObject
 
 
 class BulkCreate(object):
@@ -42,6 +42,6 @@ class BulkCreate(object):
                   response.content,
                 ))
         return [
-            AttributeObject(entity)
+            EntityObject(entity, client=self)
             for entity in response.json()['entities']
         ]

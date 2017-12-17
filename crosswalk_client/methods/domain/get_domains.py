@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from crosswalk_client.exceptions import BadResponse
-from crosswalk_client.methods.objectify import AttributeObject
+from crosswalk_client.objects.domain import DomainObject
 
 
 class GetDomains(object):
@@ -22,4 +22,4 @@ class GetDomains(object):
                   response.content,
                 ))
         domains = response.json()
-        return [AttributeObject(domain) for domain in domains]
+        return [DomainObject(domain, client=self) for domain in domains]

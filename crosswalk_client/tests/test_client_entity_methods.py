@@ -63,6 +63,7 @@ def test_best_match(token, service):
 
 def test_best_match_with_block_attrs(token, service):
     client = Client(token, service, domain="states")
+
     entity = client.best_match(
         {"name": "Arkansas"},
         block_attrs={"postal_code": "KS"},

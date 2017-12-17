@@ -4,10 +4,10 @@ import requests
 
 from crosswalk_client.decorators import (validate_block_attrs, validate_domain,
                                          validate_update_attrs)
-from crosswalk_client.exceptions import (BadRequest, BadResponse,
+from crosswalk_client.exceptions import (BadResponse,
                                          UnspecificUpdateRequestError,
                                          UpdateEntityError)
-from crosswalk_client.methods.objectify import AttributeObject
+from crosswalk_client.objects.entity import EntityObject
 
 
 class UpdateMatch(object):
@@ -25,14 +25,6 @@ class UpdateMatch(object):
         update_attrs,
         domain=None,
     ):
-        if not isinstance(update_attrs, dict):
-            raise BadRequest(
-                'update_attrs must be a dictionary of attributes.'
-            )
-        if not isinstance(block_attrs, dict):
-            raise BadRequest(
-                'block_attrs must be a dictionary of attributes.'
-            )
         if domain is None:
             domain = self.domain
         data = {
@@ -57,4 +49,4 @@ class UpdateMatch(object):
                   response.status_code,
                   response.content,
                 ))
-        return AttributeObject(response.json())
+        return EntityObject(response.json(), client=self)

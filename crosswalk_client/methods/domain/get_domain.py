@@ -2,30 +2,23 @@ from urllib.parse import urljoin
 
 import requests
 
-from crosswalk_client.decorators import validate_uuid
 from crosswalk_client.exceptions import BadResponse
+from crosswalk_client.objects.domain import DomainObject
 
 
-class DeleteById(object):
-    """
-    Delete an entity.
-    """
-    @validate_uuid
-    def delete_by_id(
-        self,
-        uuid,
-    ):
-        response = requests.delete(
+class GetDomain(object):
+    def get_domain(self, slug):
+        response = requests.get(
             urljoin(
                 self.service_address,
-                'entities/{}/'.format(uuid),
+                'domains/{}/'.format(slug),
             ),
             headers=self.headers,
         )
-        if response.status_code != 204:
+        if response.status_code != requests.codes.ok:
             raise BadResponse(
                 'The service responded with a {}: {}'.format(
                   response.status_code,
                   response.content,
                 ))
-        return True
+        return DomainObject(response.json(), client=self)

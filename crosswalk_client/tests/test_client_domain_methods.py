@@ -22,6 +22,12 @@ def test_update_domain(token, service):
     assert domain.name == "kounties" and domain.parent is None
 
 
+def test_get_domain(token, service):
+    client = Client(token, service)
+    domain = client.get_domain("states")
+    assert domain.slug == "states"
+
+
 def test_get_domains(token, service):
     client = Client(token, service)
     domains = client.get_domains()

@@ -2,21 +2,21 @@ from urllib.parse import urljoin
 
 import requests
 
-from crosswalk_client.decorators import validate_update_attrs, validate_uuid
+from crosswalk_client.decorators import validate_target_uuid, validate_uuid
 from crosswalk_client.exceptions import BadResponse
 from crosswalk_client.objects.entity import EntityObject
 
 
-class UpdateById(object):
+class SupersedeById(object):
     """
-    Update an entity.
+    Supersede an entity.
     """
     @validate_uuid
-    @validate_update_attrs
-    def update_by_id(
+    @validate_target_uuid
+    def supersede_by_id(
         self,
         uuid,
-        update_attrs,
+        superseded_by_uuid,
     ):
         response = requests.patch(
             urljoin(
@@ -24,7 +24,7 @@ class UpdateById(object):
                 'entities/{}/'.format(uuid),
             ),
             headers=self.headers,
-            json={"attributes": update_attrs}
+            json={"superseded_by": superseded_by_uuid}
         )
         if response.status_code != requests.codes.ok:
             raise BadResponse(
