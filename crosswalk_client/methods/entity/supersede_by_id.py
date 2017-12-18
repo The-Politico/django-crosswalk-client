@@ -30,6 +30,6 @@ class SupersedeById(object):
             raise BadResponse(
                 'The service responded with a {}: {}'.format(
                   response.status_code,
-                  response.content,
+                  response.data,
                 ))
         return EntityObject({"entity": response.json()}, client=self)

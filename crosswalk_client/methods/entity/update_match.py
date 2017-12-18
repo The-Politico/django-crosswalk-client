@@ -40,13 +40,13 @@ class UpdateMatch(object):
             json=data
         )
         if response.status_code == 403:
-            raise UnspecificUpdateRequestError(response.content)
+            raise UnspecificUpdateRequestError(response.data)
         if response.status_code == 400:
-            raise UpdateEntityError(response.content)
+            raise UpdateEntityError(response.data)
         if response.status_code != requests.codes.ok:
             raise BadResponse(
                 'The service responded with a {}: {}'.format(
                   response.status_code,
-                  response.content,
+                  response.data,
                 ))
         return EntityObject(response.json(), client=self)

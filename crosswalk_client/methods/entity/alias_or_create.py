@@ -49,13 +49,13 @@ class AliasOrCreate(object):
         if response.status_code == 404:
             raise CreateEntityError(
                 'Error creating entities: {}'.format(
-                    response.content,
+                    response.data,
                 )
             )
         if response.status_code != requests.codes.ok:
             raise BadResponse(
                 'The service responded with a {}: {}'.format(
                   response.status_code,
-                  response.content,
+                  response.data,
                 ))
         return EntityObject(response.json(), client=self)

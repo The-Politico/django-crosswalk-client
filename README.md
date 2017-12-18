@@ -2,9 +2,11 @@
 
 # django-crosswalk-client
 
-TK.
+See the docs for [django-crosswalk](http://django-crosswalk.readthedocs.io/en/latest/).
 
 ### Testing
+
+Pip install `pytest` and `us`.
 
 Requires a running, clean instance of django-crosswalk to test against.
 

@@ -29,7 +29,7 @@ class GetEntities(object):
             raise BadResponse(
                 'The service responded with a {}: {}'.format(
                   response.status_code,
-                  response.content,
+                  response.data,
                 ))
         entities = response.json()
         return [

@@ -19,7 +19,7 @@ class GetDomains(object):
             raise BadResponse(
                 'The service responded with a {}: {}'.format(
                   response.status_code,
-                  response.content,
+                  response.data,
                 ))
         domains = response.json()
         return [DomainObject(domain, client=self) for domain in domains]
