@@ -69,6 +69,22 @@ def test_bulk_create_entity_with_reserved_attribute_error(token, service):
         client.bulk_create(entities)
 
 
+def test_entity_attributes_of_various_types(token, service):
+    client = Client(token, service, domain="states")
+    entities = [
+        {
+            "real": False,
+            "number": 53,
+            "listicle": [1, "one"]
+        }
+    ]
+    entity = client.bulk_create(entities)[0]
+    assert entity.real is False
+    assert entity.number == 53
+    assert entity.listicle == [1, "one"]
+    entity.delete()
+
+
 def test_best_match(token, service):
     client = Client(token, service)
     entity = client.best_match({"name": "Misisipi"}, domain="states")
