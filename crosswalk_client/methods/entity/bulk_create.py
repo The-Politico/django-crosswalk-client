@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from crosswalk_client.decorators import validate_domain
+from crosswalk_client.encoder import encode
 from crosswalk_client.exceptions import BadResponse, CreateEntityError
 from crosswalk_client.objects.entity import EntityObject
 
@@ -27,7 +28,7 @@ class BulkCreate(object):
                 'domains/{}/entities/bulk-create/'.format(domain),
             ),
             headers=self.headers,
-            json=entities
+            data=encode(entities),
         )
         if response.status_code == 400:
             raise CreateEntityError(

@@ -1,3 +1,5 @@
+import uuid
+
 import stringcase
 
 
@@ -46,9 +48,18 @@ class EntityObject(object):
     def __init__(self, response, client=None):
         entity = response.pop('entity', {})
         attributes = entity.pop('attributes', {})
+
         self.__dict__ = {
             **snake_case_keys(response),
             **snake_case_keys(entity),
             **snake_case_keys(attributes),
         }
+
+        # Manually decode UUIDs, which are strings when decoded from json
+        self.uuid = uuid.UUID(self.uuid)
+        if self.superseded_by:
+            self.superseded_by = uuid.UUID(self.superseded_by)
+        if self.alias_for:
+            self.alias_for = uuid.UUID(self.alias_for)
+
         self.__client = client

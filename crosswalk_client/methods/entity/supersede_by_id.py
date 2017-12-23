@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from crosswalk_client.decorators import validate_target_uuid, validate_uuid
+from crosswalk_client.encoder import encode
 from crosswalk_client.exceptions import BadResponse
 from crosswalk_client.objects.entity import EntityObject
 
@@ -24,7 +25,7 @@ class SupersedeById(object):
                 'entities/{}/'.format(uuid),
             ),
             headers=self.headers,
-            json={"superseded_by": superseded_by_uuid}
+            data=encode({"superseded_by": superseded_by_uuid}),
         )
         if response.status_code != requests.codes.ok:
             raise BadResponse(

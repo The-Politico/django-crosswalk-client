@@ -43,6 +43,20 @@ def test_bulk_create_nested_entity_error(token, service):
         client.bulk_create(entities)
 
 
+def test_bulk_create_entity_with_uuid(token, service):
+    client = Client(token, service, domain="states")
+    an_uuid = uuid.uuid4()
+    entities = [
+        {
+            "uuid": an_uuid,
+            "name": "an entity with a uuid",
+        }
+    ]
+    entity = client.bulk_create(entities)[0]
+    assert entity.uuid == an_uuid
+    entity.delete()
+
+
 def test_bulk_create_entity_with_reserved_attribute_error(token, service):
     client = Client(token, service, domain="states")
     entities = [
@@ -85,7 +99,7 @@ def test_best_match_or_create(token, service):
 
 def test_best_match_or_create_with_uuid(token, service):
     client = Client(token, service, domain="states")
-    an_uuid = uuid.uuid4().hex
+    an_uuid = uuid.uuid4()
     entity = client.best_match_or_create(
         {"name": "Xanadu"},
         create_attrs={"uuid": an_uuid},

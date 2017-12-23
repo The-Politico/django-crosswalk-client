@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from crosswalk_client.decorators import validate_block_attrs, validate_domain
+from crosswalk_client.encoder import encode
 from crosswalk_client.exceptions import (BadRequest, BadResponse,
                                          UnspecificDeleteRequestError)
 
@@ -28,7 +29,7 @@ class DeleteMatch(object):
                 'domains/{}/entities/delete-match/'.format(domain),
             ),
             headers=self.headers,
-            json=data
+            data=encode(data)
         )
         if response.status_code == 403:
             raise UnspecificDeleteRequestError(

@@ -6,6 +6,7 @@ from crosswalk_client.decorators import (validate_block_attrs,
                                          validate_create_attrs,
                                          validate_domain, validate_query,
                                          validate_threshold)
+from crosswalk_client.encoder import encode
 from crosswalk_client.exceptions import BadResponse
 from crosswalk_client.objects.entity import EntityObject
 
@@ -48,7 +49,7 @@ class BestMatchOrCreate(object):
                 'domains/{}/entities/best-match-or-create/'.format(domain),
             ),
             headers=self.headers,
-            json=data
+            data=encode(data),
         )
         if response.status_code != requests.codes.ok:
             raise BadResponse(

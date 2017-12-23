@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from crosswalk_client.decorators import validate_target_uuid, validate_uuid
+from crosswalk_client.encoder import encode
 from crosswalk_client.exceptions import BadResponse
 from crosswalk_client.objects.entity import EntityObject
 
@@ -24,7 +25,7 @@ class AliasById(object):
                 'entities/{}/'.format(alias_uuid),
             ),
             headers=self.headers,
-            json={"alias_for": alias_for_uuid}
+            data=encode({"alias_for": alias_for_uuid})
         )
         if response.status_code != requests.codes.ok:
             raise BadResponse(

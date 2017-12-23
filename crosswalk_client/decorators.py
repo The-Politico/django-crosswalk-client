@@ -96,10 +96,8 @@ def validate_threshold(function):
 
 def validate_uuid(function):
     def wrapper(*args, **kwargs):
-        uuid_string = args[1]
-        try:
-            UUID(uuid_string, version=4)
-        except ValueError:
+        uuid = args[1]
+        if not isinstance(uuid, UUID):
             raise MalformedUUID("Invalid UUID.")
         return function(*args, **kwargs)
     return wrapper
@@ -108,14 +106,11 @@ def validate_uuid(function):
 def validate_target_uuid(function):
     """
     Target UUIDs are used to set foreign keys and should be either a valid UUID
-    or None to unset the froeign key.
+    or None to unset the foreign key.
     """
     def wrapper(*args, **kwargs):
-        uuid_string = args[2]
-        try:
-            if uuid_string is not None:
-                UUID(uuid_string, version=4)
-        except ValueError:
+        uuid = args[2]
+        if uuid is not None and not isinstance(uuid, UUID):
             raise MalformedUUID("Invalid UUID for target.")
         return function(*args, **kwargs)
     return wrapper

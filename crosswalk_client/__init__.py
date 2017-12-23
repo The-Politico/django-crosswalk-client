@@ -13,7 +13,8 @@ class Client(ClientMethods):
         self.token = token
         self.service_address = service_address
         self.headers = {
-            'Authorization': 'TOKEN {}'.format(self.token)
+            'Authorization': 'TOKEN {}'.format(self.token),
+            'Content-Type': 'application/json',
         }
         self.domain = domain
         self.threshold = threshold
