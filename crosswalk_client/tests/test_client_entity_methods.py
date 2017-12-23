@@ -114,6 +114,13 @@ def test_get_entities(token, service):
     assert entities[0].name is not None
 
 
+def test_get_entity(token, service):
+    client = Client(token, service, domain="states")
+    entity = client.get_entities()[0]
+    returned_entity = client.get_entity(entity.uuid)
+    assert returned_entity.uuid == entity.uuid
+
+
 def test_get_entities_with_block_attrs(token, service):
     client = Client(token, service, domain="states")
     entities = client.get_entities(block_attrs={"country": "USA"})
