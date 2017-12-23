@@ -26,6 +26,6 @@ class DeleteById(object):
             raise BadResponse(
                 'The service responded with a {}: {}'.format(
                   response.status_code,
-                  response.data,
+                  response.content,
                 ))
         return True

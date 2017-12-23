@@ -8,7 +8,7 @@ See the docs for [django-crosswalk](http://django-crosswalk.readthedocs.io/en/la
 
 Pip install `pytest` and `us`.
 
-Requires a running, clean instance of django-crosswalk to test against.
+Requires a running, **clean** instance of django-crosswalk to test against.
 
 To run tests, pass your token and the service address to your running instance to pytest:
 

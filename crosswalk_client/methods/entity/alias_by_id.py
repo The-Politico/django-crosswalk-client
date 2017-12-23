@@ -30,6 +30,6 @@ class AliasById(object):
             raise BadResponse(
                 'The service responded with a {}: {}'.format(
                   response.status_code,
-                  response.data,
+                  response.content,
                 ))
         return EntityObject({"entity": response.json()}, client=self)
