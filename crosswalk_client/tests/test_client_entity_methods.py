@@ -43,6 +43,18 @@ def test_bulk_create_nested_entity_error(token, service):
         client.bulk_create(entities)
 
 
+def test_bulk_create_entity_with_reserved_attribute_error(token, service):
+    client = Client(token, service, domain="states")
+    entities = [
+        {
+            "a": "bad entity",
+            "created": "with a reserved key, 'created'"
+        }
+    ]
+    with pytest.raises(CreateEntityError):
+        client.bulk_create(entities)
+
+
 def test_bulk_create_entity_with_uuid(token, service):
     client = Client(token, service, domain="states")
     an_uuid = uuid.uuid4()
@@ -55,18 +67,6 @@ def test_bulk_create_entity_with_uuid(token, service):
     entity = client.bulk_create(entities)[0]
     assert entity.uuid == an_uuid
     entity.delete()
-
-
-def test_bulk_create_entity_with_reserved_attribute_error(token, service):
-    client = Client(token, service, domain="states")
-    entities = [
-        {
-            "a": "bad entity",
-            "created": "with a reserved key, 'created'"
-        }
-    ]
-    with pytest.raises(CreateEntityError):
-        client.bulk_create(entities)
 
 
 def test_entity_attributes_of_various_types(token, service):
@@ -139,10 +139,10 @@ def test_get_entity(token, service):
 
 def test_get_entities_with_block_attrs(token, service):
     client = Client(token, service, domain="states")
-    entities = client.get_entities(block_attrs={"country": "USA"})
+    entities = client.get_entities({"country": "USA"})
     assert len(entities) == 51
 
-    entities = client.get_entities(block_attrs={"postal_code": "KS"})
+    entities = client.get_entities({"postal_code": "KS"})
     assert entities[0].name == "Kansas"
 
 
@@ -153,6 +153,7 @@ def test_update_entity_by_id(token, service):
         entity.uuid,
         {"sacred river": "Alph", "name": "Zanadu"}
     )
+    assert entity.name == "Zanadu"
     entity = client.update_by_id(entity.uuid, {"name": "Xanadu"})
     assert entity.sacred_river == "Alph" and entity.name == "Xanadu"
 
