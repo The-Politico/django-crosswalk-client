@@ -1,13 +1,16 @@
 import uuid
 
-import pytest
 import us
 
+import pytest
 from crosswalk_client import Client
-from crosswalk_client.exceptions import (BadResponse, CreateEntityError,
-                                         UnspecificDeleteRequestError,
-                                         UnspecificUpdateRequestError,
-                                         UpdateEntityError)
+from crosswalk_client.exceptions import (
+    BadResponse,
+    CreateEntityError,
+    UnspecificDeleteRequestError,
+    UnspecificUpdateRequestError,
+    UpdateEntityError,
+)
 
 
 def test_setup(token, service):
@@ -16,29 +19,19 @@ def test_setup(token, service):
 
 
 def test_bulk_create(token, service):
-    client = Client(token, service, domain="states")
+    client = Client(token, service)
+    domain = client.get_domain("states")
     states = [
-        {
-            "name": s.name,
-            "postal_code": s.abbr,
-            "country": "USA"
-        }
+        {"name": s.name, "postal_code": s.abbr, "country": "USA"}
         for s in us.states.STATES
     ]
-    entities = client.bulk_create(states)
+    entities = client.bulk_create(states, domain=domain)
     assert entities[0].name == states[0]["name"]
 
 
 def test_bulk_create_nested_entity_error(token, service):
     client = Client(token, service, domain="states")
-    entities = [
-        {
-            "a": "bad entity",
-            "nested": {
-                "too": "deeply"
-            }
-        }
-    ]
+    entities = [{"a": "bad entity", "nested": {"too": "deeply"}}]
     with pytest.raises(CreateEntityError):
         client.bulk_create(entities)
 
@@ -46,10 +39,7 @@ def test_bulk_create_nested_entity_error(token, service):
 def test_bulk_create_entity_with_reserved_attribute_error(token, service):
     client = Client(token, service, domain="states")
     entities = [
-        {
-            "a": "bad entity",
-            "created": "with a reserved key, 'created'"
-        }
+        {"a": "bad entity", "created": "with a reserved key, 'created'"}
     ]
     with pytest.raises(CreateEntityError):
         client.bulk_create(entities)
@@ -58,12 +48,7 @@ def test_bulk_create_entity_with_reserved_attribute_error(token, service):
 def test_bulk_create_entity_with_uuid(token, service):
     client = Client(token, service, domain="states")
     an_uuid = uuid.uuid4()
-    entities = [
-        {
-            "uuid": an_uuid,
-            "name": "an entity with a uuid",
-        }
-    ]
+    entities = [{"uuid": an_uuid, "name": "an entity with a uuid"}]
     entity = client.bulk_create(entities)[0]
     assert entity.uuid == an_uuid
     entity.delete()
@@ -71,13 +56,7 @@ def test_bulk_create_entity_with_uuid(token, service):
 
 def test_entity_attributes_of_various_types(token, service):
     client = Client(token, service, domain="states")
-    entities = [
-        {
-            "real": False,
-            "number": 53,
-            "listicle": [1, "one"]
-        }
-    ]
+    entities = [{"real": False, "number": 53, "listicle": [1, "one"]}]
     entity = client.bulk_create(entities)[0]
     assert entity.real is False
     assert entity.number == 53
@@ -86,8 +65,8 @@ def test_entity_attributes_of_various_types(token, service):
 
 
 def test_best_match(token, service):
-    client = Client(token, service)
-    entity = client.best_match({"name": "Misisipi"}, domain="states")
+    client = Client(token, service, domain="states")
+    entity = client.best_match({"name": "Misisipi"})
     assert entity.name == "Mississippi"
 
 
@@ -95,8 +74,7 @@ def test_best_match_with_block_attrs(token, service):
     client = Client(token, service, domain="states")
 
     entity = client.best_match(
-        {"name": "Arkansas"},
-        block_attrs={"postal_code": "KS"},
+        {"name": "Arkansas"}, block_attrs={"postal_code": "KS"}
     )
     assert entity.name == "Kansas"
 
@@ -106,10 +84,7 @@ def test_best_match_with_block_attrs(token, service):
 
 def test_best_match_or_create(token, service):
     client = Client(token, service, domain="states")
-    entity = client.best_match_or_create(
-        {"name": "Narnia"},
-        threshold=75,
-    )
+    entity = client.best_match_or_create({"name": "Narnia"}, threshold=75)
     assert entity.created is True and entity.name == "Narnia"
 
 
@@ -117,9 +92,7 @@ def test_best_match_or_create_with_uuid(token, service):
     client = Client(token, service, domain="states")
     an_uuid = uuid.uuid4()
     entity = client.best_match_or_create(
-        {"name": "Xanadu"},
-        create_attrs={"uuid": an_uuid},
-        threshold=75,
+        {"name": "Xanadu"}, create_attrs={"uuid": an_uuid}, threshold=75
     )
     assert entity.uuid == an_uuid
 
@@ -132,7 +105,8 @@ def test_get_entities(token, service):
 
 def test_get_entity(token, service):
     client = Client(token, service, domain="states")
-    entity = client.get_entities()[0]
+    domain = client.get_domain("states")
+    entity = client.get_entities(domain=domain)[0]
     returned_entity = client.get_entity(entity.uuid)
     assert returned_entity.uuid == entity.uuid
 
@@ -150,8 +124,7 @@ def test_update_entity_by_id(token, service):
     client = Client(token, service, domain="states")
     entity = client.best_match({"name": "Xanadu"})
     entity = client.update_by_id(
-        entity.uuid,
-        {"sacred river": "Alph", "name": "Zanadu"}
+        entity.uuid, {"sacred river": "Alph", "name": "Zanadu"}
     )
     assert entity.name == "Zanadu"
     entity = client.update_by_id(entity.uuid, {"name": "Xanadu"})
@@ -161,8 +134,7 @@ def test_update_entity_by_id(token, service):
 def test_update_entity_by_match(token, service):
     client = Client(token, service, domain="states")
     entity = client.update_match(
-        {"name": "Xanadu"},
-        {"sacred river": "Mississippi"}
+        {"name": "Xanadu"}, {"sacred river": "Mississippi"}
     )
     assert entity.sacred_river == "Mississippi"
 
@@ -171,8 +143,7 @@ def test_update_entity_by_match_error(token, service):
     client = Client(token, service, domain="states")
     with pytest.raises(UnspecificUpdateRequestError):
         client.update_match(
-            {"country": "USA"},
-            {"sacred river": "Mississippi"}
+            {"country": "USA"}, {"sacred river": "Mississippi"}
         )
 
 
@@ -180,8 +151,7 @@ def test_update_entity_by_match_invalid_data_error(token, service):
     client = Client(token, service, domain="states")
     with pytest.raises(UpdateEntityError):
         client.update_match(
-            {"name": "Xanadu"},
-            {"stuff": {"nested": "too deeply"}}
+            {"name": "Xanadu"}, {"stuff": {"nested": "too deeply"}}
         )
 
 
@@ -231,8 +201,7 @@ def test_create_or_alias_fails_on_existing_entity(token, service):
     client = Client(token, service, domain="states")
     with pytest.raises(BadResponse):
         client.alias_or_create(
-            {"name": "Alderaan"},
-            create_attrs={"galaxy": "Far, far away"}
+            {"name": "Alderaan"}, create_attrs={"galaxy": "Far, far away"}
         )
 
 
