@@ -10,6 +10,7 @@ from crosswalk_client.exceptions import (
     MalformedUpdateAttributes,
     UnspecificDeleteRequestError,
     UnspecificUpdateRequestError,
+    UnspecificCreateRequestError,
 )
 
 
@@ -80,6 +81,25 @@ def test_best_match_with_block_attrs(token, service):
 
     entity = client.best_match({"name": "Arkansas"})
     assert entity.name == "Arkansas"
+
+
+def test_match_or_create(token, service):
+    client = Client(token, service, domain="states")
+    entity = client.match_or_create(
+        {"name": "Thunderdome"}, create_attrs={"country": "Australia"}
+    )
+    assert entity.created is True and entity.name == "Thunderdome"
+
+    entity2 = client.match_or_create(
+        {"name": "Gas City"}, create_attrs={"country": "Australia"}
+    )
+    assert entity2.created is True and entity2.name == "Gas City"
+
+    with pytest.raises(UnspecificCreateRequestError):
+        client.match_or_create({"country": "Australia"})
+
+    entity.delete()
+    entity2.delete()
 
 
 def test_best_match_or_create(token, service):

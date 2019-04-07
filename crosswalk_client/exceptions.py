@@ -75,6 +75,10 @@ class UnspecificUpdateRequestError(BaseError):
     pass
 
 
+class UnspecificCreateRequestError(BaseError):
+    pass
+
+
 class CreateEntityError(BaseError):
     pass
 

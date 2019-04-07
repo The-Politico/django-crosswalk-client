@@ -18,6 +18,7 @@ from .entity.delete_by_id import DeleteById
 from .entity.delete_match import DeleteMatch
 from .entity.get_entities import GetEntities
 from .entity.get_entity import GetEntity
+from .entity.match_or_create import MatchOrCreate
 from .entity.supersede_by_id import SupersedeById
 from .entity.update_by_id import UpdateById
 from .entity.update_match import UpdateMatch
@@ -37,6 +38,7 @@ class ClientMethods(
     GetDomains,
     GetEntities,
     GetEntity,
+    MatchOrCreate,
     DeleteMatch,
     AliasOrCreate,
     DeleteById,
