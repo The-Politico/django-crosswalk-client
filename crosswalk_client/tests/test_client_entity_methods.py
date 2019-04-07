@@ -8,9 +8,8 @@ from crosswalk_client.exceptions import (
     BadResponse,
     CreateEntityError,
     MalformedUpdateAttributes,
-    UnspecificDeleteRequestError,
-    UnspecificUpdateRequestError,
-    UnspecificCreateRequestError,
+    UnspecificQueryError,
+    EntityNotFoundError,
 )
 
 
@@ -83,6 +82,22 @@ def test_best_match_with_block_attrs(token, service):
     assert entity.name == "Arkansas"
 
 
+def test_match(token, service):
+    client = Client(token, service, domain="states")
+    entity = client.match(
+        {"name": "Kansas"}, block_attrs={"postal_code": "KS"}
+    )
+    assert entity.name == "Kansas"
+
+
+def test_match_exceptions(token, service):
+    client = Client(token, service, domain="states")
+    with pytest.raises(UnspecificQueryError):
+        client.match({"country": "USA"})
+    with pytest.raises(EntityNotFoundError):
+        client.match({"country": "Deutschland"})
+
+
 def test_match_or_create(token, service):
     client = Client(token, service, domain="states")
     entity = client.match_or_create(
@@ -95,7 +110,7 @@ def test_match_or_create(token, service):
     )
     assert entity2.created is True and entity2.name == "Gas City"
 
-    with pytest.raises(UnspecificCreateRequestError):
+    with pytest.raises(UnspecificQueryError):
         client.match_or_create({"country": "Australia"})
 
     entity.delete()
@@ -161,7 +176,7 @@ def test_update_entity_by_match(token, service):
 
 def test_update_entity_by_match_error(token, service):
     client = Client(token, service, domain="states")
-    with pytest.raises(UnspecificUpdateRequestError):
+    with pytest.raises(UnspecificQueryError):
         client.update_match(
             {"country": "USA"}, {"sacred river": "Mississippi"}
         )
@@ -190,7 +205,7 @@ def test_delete_entity_by_id(token, service):
 
 def test_unspecific_delete_error(token, service):
     client = Client(token, service, domain="states")
-    with pytest.raises(UnspecificDeleteRequestError):
+    with pytest.raises(UnspecificQueryError):
         client.delete_match({"country": "USA"})
 
 

@@ -11,41 +11,46 @@ from .domain.update_domain import UpdateDomain
 
 from .entity.alias_by_id import AliasById
 from .entity.alias_or_create import AliasOrCreate
-from .entity.best_match import BestMatch
 from .entity.best_match_or_create import BestMatchOrCreate
+from .entity.best_match import BestMatch
 from .entity.bulk_create import BulkCreate
 from .entity.delete_by_id import DeleteById
 from .entity.delete_match import DeleteMatch
 from .entity.get_entities import GetEntities
 from .entity.get_entity import GetEntity
 from .entity.match_or_create import MatchOrCreate
+from .entity.match import Match
 from .entity.supersede_by_id import SupersedeById
 from .entity.update_by_id import UpdateById
 from .entity.update_match import UpdateMatch
 
 
 class ClientMethods(
+    # client methods
     ClientCheck,
-    BulkCreate,
-    DeleteDomain,
-    CreateDomain,
-    BestMatch,
-    BestMatchOrCreate,
     SetScorer,
     SetDomain,
     SetThreshold,
+    # domain methods
+    CreateDomain,
+    DeleteDomain,
     GetDomain,
     GetDomains,
+    UpdateDomain,
+    # entity methods
+    AliasById,
+    AliasOrCreate,
+    BestMatchOrCreate,
+    BestMatch,
+    BulkCreate,
+    DeleteById,
+    DeleteMatch,
     GetEntities,
     GetEntity,
     MatchOrCreate,
-    DeleteMatch,
-    AliasOrCreate,
-    DeleteById,
+    Match,
+    SupersedeById,
     UpdateById,
     UpdateMatch,
-    UpdateDomain,
-    AliasById,
-    SupersedeById,
 ):
     pass

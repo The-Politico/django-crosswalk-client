@@ -3,10 +3,7 @@ from urllib.parse import urljoin
 import requests
 
 from crosswalk_client.encoder import encode
-from crosswalk_client.exceptions import (
-    BadResponse,
-    UnspecificCreateRequestError,
-)
+from crosswalk_client.exceptions import BadResponse, UnspecificQueryError
 from crosswalk_client.objects.entity import EntityObject
 from crosswalk_client.validators.entity import (
     validate_block_attrs_kwarg,
@@ -48,7 +45,7 @@ class MatchOrCreate(object):
             data=encode(data),
         )
         if response.status_code == 403:
-            raise UnspecificCreateRequestError(
+            raise UnspecificQueryError(
                 "Query in request matched more than one entity."
             )
         if response.status_code != requests.codes.ok:

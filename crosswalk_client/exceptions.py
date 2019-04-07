@@ -71,11 +71,7 @@ class UnspecificDeleteRequestError(BaseError):
     pass
 
 
-class UnspecificUpdateRequestError(BaseError):
-    pass
-
-
-class UnspecificCreateRequestError(BaseError):
+class UnspecificQueryError(BaseError):
     pass
 
 
@@ -84,4 +80,8 @@ class CreateEntityError(BaseError):
 
 
 class UpdateEntityError(BaseError):
+    pass
+
+
+class EntityNotFoundError(BaseError):
     pass

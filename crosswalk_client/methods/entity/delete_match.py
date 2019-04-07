@@ -6,7 +6,7 @@ from crosswalk_client.encoder import encode
 from crosswalk_client.exceptions import (
     BadRequest,
     BadResponse,
-    UnspecificDeleteRequestError,
+    UnspecificQueryError,
 )
 from crosswalk_client.validators.entity import (
     validate_domain_kwarg,
@@ -32,8 +32,8 @@ class DeleteMatch(object):
             data=encode(data),
         )
         if response.status_code == 403:
-            raise UnspecificDeleteRequestError(
-                "Delete request matched more than one record."
+            raise UnspecificQueryError(
+                "Query in request matched more than one entity."
             )
         if response.status_code != 204:
             raise BadResponse(
