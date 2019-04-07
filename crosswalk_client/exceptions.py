@@ -31,7 +31,19 @@ class MalformedUpdateAttributes(BaseError):
     pass
 
 
+class MissingThreshold(BaseError):
+    pass
+
+
 class MalformedThreshold(BaseError):
+    pass
+
+
+class MissingScorer(BaseError):
+    pass
+
+
+class MalformedScorer(BaseError):
     pass
 
 

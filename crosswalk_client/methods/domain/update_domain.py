@@ -1,28 +1,17 @@
 from urllib.parse import urljoin
 
 import requests
-from slugify import slugify
 
-from crosswalk_client.exceptions import BadResponse, MalformedDomain
+from crosswalk_client.exceptions import BadResponse
 from crosswalk_client.objects.domain import DomainObject
+from crosswalk_client.validators.domain import validate_required_domain_arg
 
 
 class UpdateDomain(object):
-    """
-    Update a domain.
-    """
-
+    @validate_required_domain_arg
     def update_domain(self, domain, update_attrs):
-        if isinstance(domain, DomainObject):
-            slug = domain.slug
-        elif isinstance(domain, str):
-            slug = slugify(domain)
-        else:
-            raise MalformedDomain(
-                "You didn't provide a domain instance or slug."
-            )
         response = requests.patch(
-            urljoin(self.service_address, f"domains/{slug}/"),
+            urljoin(self.service_address, f"domains/{domain}/"),
             headers=self.headers,
             json=update_attrs,
         )

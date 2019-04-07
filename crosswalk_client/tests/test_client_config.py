@@ -1,6 +1,14 @@
 import pytest
 from crosswalk_client import Client
-from crosswalk_client.exceptions import ConfigError
+from crosswalk_client.exceptions import (
+    ConfigError,
+    MalformedDomain,
+    MalformedScorer,
+    MalformedThreshold,
+    MissingDomain,
+    MissingScorer,
+    MissingThreshold,
+)
 
 
 def test_misconfigured_config(token, service):
@@ -20,6 +28,16 @@ def test_set_threshold(token, service):
     assert client.threshold == 99
 
 
+def test_set_threshold_exceptions(token, service):
+    client = Client(token, service)
+    with pytest.raises(MissingThreshold):
+        client.set_threshold()
+    with pytest.raises(MalformedThreshold):
+        client.set_threshold(200)
+    with pytest.raises(MalformedThreshold):
+        client.set_threshold("asd")
+
+
 def test_set_domain(token, service):
     client = Client(token, service)
     client.set_domain("sharks")
@@ -32,7 +50,23 @@ def test_set_domain(token, service):
     domain.delete()
 
 
+def test_set_domain_exceptions(token, service):
+    client = Client(token, service)
+    with pytest.raises(MissingDomain):
+        client.set_domain()
+    with pytest.raises(MalformedDomain):
+        client.set_domain("U.S. states")
+
+
 def test_set_scorer(token, service):
     client = Client(token, service)
-    client.set_scorer("random.scorer")
-    assert client.scorer == "random.scorer"
+    client.set_scorer("fuzzywuzzy.partial_ratio_process")
+    assert client.scorer == "fuzzywuzzy.partial_ratio_process"
+
+
+def test_set_scorer_exceptions(token, service):
+    client = Client(token, service)
+    with pytest.raises(MissingScorer):
+        client.set_scorer()
+    with pytest.raises(MalformedScorer):
+        client.set_scorer("random.scorer")

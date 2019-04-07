@@ -1,29 +1,23 @@
 from urllib.parse import urljoin
 
 import requests
-from slugify import slugify
 
-from crosswalk_client.exceptions import BadResponse, MalformedDomain
+from crosswalk_client.exceptions import BadResponse
 from crosswalk_client.objects.domain import DomainObject
+from crosswalk_client.validators.domain import (
+    validate_parent_domain_kwarg,
+    validate_required_domain_string_arg,
+)
 
 
 class CreateDomain(object):
     """ Create a domain. """
 
+    @validate_parent_domain_kwarg
+    @validate_required_domain_string_arg
     def create_domain(self, domain, parent=None):
-        if not isinstance(domain, str):
-            raise MalformedDomain(
-                "You didn't pass a string for your domain name."
-            )
         if parent:
-            if isinstance(parent, DomainObject):
-                data = {"name": domain, "parent": parent.slug}
-            elif isinstance(parent, str):
-                data = {"name": domain, "parent": slugify(parent)}
-            else:
-                raise MalformedDomain(
-                    "Parent should be a Domain instance or slug."
-                )
+            data = {"name": domain, "parent": parent}
         else:
             data = {"name": domain}
         response = requests.post(

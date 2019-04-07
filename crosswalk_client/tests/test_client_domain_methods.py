@@ -1,6 +1,10 @@
 import pytest
 from crosswalk_client import Client
-from crosswalk_client.exceptions import MalformedDomain, ProtectedDomainError
+from crosswalk_client.exceptions import (
+    MalformedDomain,
+    MissingDomain,
+    ProtectedDomainError,
+)
 
 
 def test_create_domain(token, service):
@@ -22,6 +26,16 @@ def test_create_domain(token, service):
 
     townships = client.create_domain("townships", parent=states)
     assert townships.name == "townships" and townships.parent == "states"
+
+
+def test_create_domain_exceptions(token, service):
+    client = Client(token, service)
+    with pytest.raises(MissingDomain):
+        client.create_domain()
+    with pytest.raises(MalformedDomain):
+        client.create_domain("countries", parent="a parent name")
+    with pytest.raises(MalformedDomain):
+        client.create_domain("countries", parent=1)
 
 
 def test_update_domain(token, service):
@@ -62,6 +76,14 @@ def test_get_domains(token, service):
 
     domains = client.get_domains(parent="states")
     assert len(domains) == 2
+
+
+def test_get_domains_exceptions(token, service):
+    client = Client(token, service)
+    with pytest.raises(MalformedDomain):
+        client.get_domains(parent=1)
+    with pytest.raises(MalformedDomain):
+        client.get_domains(parent="U.S. states")
 
 
 def test_delete_protected_domain_error(token, service):

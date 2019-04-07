@@ -1,29 +1,16 @@
 from urllib.parse import urljoin
 
 import requests
-from slugify import slugify
 
-from crosswalk_client.exceptions import (BadResponse, MalformedDomain,
-                                         ProtectedDomainError)
-from crosswalk_client.objects.domain import DomainObject
+from crosswalk_client.exceptions import BadResponse, ProtectedDomainError
+from crosswalk_client.validators.domain import validate_required_domain_arg
 
 
 class DeleteDomain(object):
-    """
-    Delete a domain.
-    """
-
+    @validate_required_domain_arg
     def delete_domain(self, domain):
-        if isinstance(domain, DomainObject):
-            slug = domain.slug
-        elif isinstance(domain, str):
-            slug = slugify(domain)
-        else:
-            raise MalformedDomain(
-                "You didn't provide a domain instance or slug."
-            )
         response = requests.delete(
-            urljoin(self.service_address, f"domains/{slug}/"),
+            urljoin(self.service_address, f"domains/{domain}/"),
             headers=self.headers,
         )
         if response.status_code == 500:

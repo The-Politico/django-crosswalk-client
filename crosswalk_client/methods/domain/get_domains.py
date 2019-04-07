@@ -1,24 +1,18 @@
 from urllib.parse import urljoin
 
 import requests
-from slugify import slugify
 
-from crosswalk_client.exceptions import BadResponse, MalformedDomain
+from crosswalk_client.exceptions import BadResponse
 from crosswalk_client.objects.domain import DomainObject
+from crosswalk_client.validators.domain import validate_parent_domain_kwarg
 
 
 class GetDomains(object):
+    @validate_parent_domain_kwarg
     def get_domains(self, parent=None):
         params = {}
         if parent:
-            if isinstance(parent, DomainObject):
-                params["parent"] = parent.slug
-            elif isinstance(parent, str):
-                params["parent"] = slugify(parent)
-            else:
-                raise MalformedDomain(
-                    "You didn't pass parent as a Domain instance or slug."
-                )
+            params["parent"] = parent
         response = requests.get(
             urljoin(self.service_address, "domains/"),
             headers=self.headers,

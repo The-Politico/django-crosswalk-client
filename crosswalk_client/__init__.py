@@ -8,13 +8,13 @@ class Client(ClientMethods):
         service_address,
         domain=None,
         threshold=80,
-        scorer='fuzzywuzzy.default_process',
+        scorer="fuzzywuzzy.default_process",
     ):
         self.token = token
         self.service_address = service_address
         self.headers = {
-            'Authorization': 'TOKEN {}'.format(self.token),
-            'Content-Type': 'application/json',
+            "Authorization": "TOKEN {}".format(self.token),
+            "Content-Type": "application/json",
         }
         self.domain = domain
         self.threshold = threshold

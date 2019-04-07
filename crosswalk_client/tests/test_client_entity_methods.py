@@ -7,9 +7,9 @@ from crosswalk_client import Client
 from crosswalk_client.exceptions import (
     BadResponse,
     CreateEntityError,
+    MalformedUpdateAttributes,
     UnspecificDeleteRequestError,
     UnspecificUpdateRequestError,
-    UpdateEntityError,
 )
 
 
@@ -149,7 +149,7 @@ def test_update_entity_by_match_error(token, service):
 
 def test_update_entity_by_match_invalid_data_error(token, service):
     client = Client(token, service, domain="states")
-    with pytest.raises(UpdateEntityError):
+    with pytest.raises(MalformedUpdateAttributes):
         client.update_match(
             {"name": "Xanadu"}, {"stuff": {"nested": "too deeply"}}
         )

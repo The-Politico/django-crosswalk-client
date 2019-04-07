@@ -2,21 +2,24 @@ from urllib.parse import urljoin
 
 import requests
 
-from crosswalk_client.decorators import (validate_block_attrs,
-                                         validate_create_attrs,
-                                         validate_domain, validate_query,
-                                         validate_threshold)
 from crosswalk_client.encoder import encode
 from crosswalk_client.exceptions import BadResponse, CreateEntityError
 from crosswalk_client.objects.entity import EntityObject
+from crosswalk_client.validators.entity import (
+    validate_block_attrs_kwarg,
+    validate_create_attrs_kwarg,
+    validate_domain_kwarg,
+    validate_required_query_arg,
+    validate_threshold_kwarg,
+)
 
 
 class AliasOrCreate(object):
-    @validate_query
-    @validate_block_attrs
-    @validate_create_attrs
-    @validate_domain
-    @validate_threshold
+    @validate_required_query_arg
+    @validate_block_attrs_kwarg
+    @validate_create_attrs_kwarg
+    @validate_domain_kwarg
+    @validate_threshold_kwarg
     def alias_or_create(
         self,
         query,
@@ -42,21 +45,19 @@ class AliasOrCreate(object):
         response = requests.post(
             urljoin(
                 self.service_address,
-                'domains/{}/entities/alias-or-create/'.format(domain),
+                "domains/{}/entities/alias-or-create/".format(domain),
             ),
             headers=self.headers,
-            data=encode(data)
+            data=encode(data),
         )
         if response.status_code == 404:
             raise CreateEntityError(
-                'Error creating entities: {}'.format(
-                    response.content,
-                )
+                "Error creating entities: {}".format(response.content)
             )
         if response.status_code != requests.codes.ok:
             raise BadResponse(
-                'The service responded with a {}: {}'.format(
-                  response.status_code,
-                  response.content,
-                ))
+                "The service responded with a {}: {}".format(
+                    response.status_code, response.content
+                )
+            )
         return EntityObject(response.json(), client=self)

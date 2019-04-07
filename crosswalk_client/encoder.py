@@ -6,6 +6,7 @@ class CustomEncoder(json.JSONEncoder):
     """
     Extension of custom encoder that encodes UUIDs.
     """
+
     def default(self, obj):
         if isinstance(obj, UUID):
             return obj.__str__()
