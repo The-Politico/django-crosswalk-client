@@ -2,6 +2,8 @@
 
 # django-crosswalk-client
 
+[![PyPI version](https://badge.fury.io/py/django-crosswalk-client.svg)](https://badge.fury.io/py/django-crosswalk-client)
+
 See the docs for [django-crosswalk](http://django-crosswalk.readthedocs.io/en/latest/).
 
 ### Testing

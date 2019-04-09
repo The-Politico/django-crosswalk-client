@@ -14,6 +14,7 @@ from .entity.alias_or_create import AliasOrCreate
 from .entity.best_match_or_create import BestMatchOrCreate
 from .entity.best_match import BestMatch
 from .entity.bulk_create import BulkCreate
+from .entity.create import Create
 from .entity.delete_by_id import DeleteById
 from .entity.delete_match import DeleteMatch
 from .entity.get_entities import GetEntities
@@ -43,6 +44,7 @@ class ClientMethods(
     BestMatchOrCreate,
     BestMatch,
     BulkCreate,
+    Create,
     DeleteById,
     DeleteMatch,
     GetEntities,

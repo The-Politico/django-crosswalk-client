@@ -49,4 +49,7 @@ class BestMatch(object):
                     response.status_code, response.content
                 )
             )
+        data = response.json()
+        if data == {}:
+            return None
         return EntityObject(response.json(), client=self)

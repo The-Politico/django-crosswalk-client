@@ -18,6 +18,15 @@ def test_setup(token, service):
     client.create_domain("states")
 
 
+def test_create(token, service):
+    client = Client(token, service)
+    domain = client.get_domain("states")
+    client.set_domain(domain)
+    entity = client.create({"name": "District of Columbia"})
+    assert entity.name == "District of Columbia"
+    entity.delete()  # Taxation w/out representation!
+
+
 def test_bulk_create(token, service):
     client = Client(token, service)
     domain = client.get_domain("states")
@@ -133,8 +142,10 @@ def test_best_match_or_create_with_uuid(token, service):
 
 
 def test_get_entities(token, service):
-    client = Client(token, service, domain="states")
-    entities = client.get_entities()
+    client = Client(token, service)
+    states = client.get_domain("states")
+    entities = client.get_entities(domain=states)
+    assert len(entities) > 50
     assert entities[0].name is not None
 
 
@@ -244,6 +255,38 @@ def test_best_match_an_alias(token, service):
     client = Client(token, service, domain="states")
     entity = client.best_match({"name": "Kalifornia"})
     assert entity.name == "California"
+
+
+def test_entity_cannot_alias_itself(token, service):
+    client = Client(token, service)
+    domain = client.create_domain("temp domain")
+    entity1, entity2 = client.bulk_create(
+        [{"name": "A fake Entity"}, {"name": "A second faker"}], domain=domain
+    )
+    with pytest.raises(BadResponse):
+        entity1.set_alias_for(entity1)
+    assert entity1.alias_for is None
+    entity1.set_alias_for(entity2)
+    assert entity1.alias_for == entity2.uuid
+    entity1.delete()
+    entity2.delete()
+    domain.delete()
+
+
+def test_empty_domain(token, service):
+    client = Client(token, service)
+    domain = client.create_domain("empty domain")
+    entity = client.best_match({"name": "does not exist"}, domain=domain)
+    assert entity is None
+
+    entity = client.best_match_or_create(
+        {"name": "should create"}, domain=domain
+    )
+    assert entity.created is True
+    assert entity.name == "should create"
+
+    entity.delete()
+    domain.delete()
 
 
 def test_cleanup(token, service):

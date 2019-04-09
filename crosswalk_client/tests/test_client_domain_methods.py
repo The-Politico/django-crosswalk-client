@@ -68,9 +68,9 @@ def test_get_domain(token, service):
 def test_get_domains(token, service):
     client = Client(token, service)
     domains = client.get_domains()
-    states = domains[0]
-    assert states.slug == "states"
+    assert len(domains) == 4
 
+    states = client.get_domain("states")
     domains = client.get_domains(parent=states)
     assert len(domains) == 2
 
