@@ -37,3 +37,28 @@ def test_domain_delete(token, service):
     domain = client.get_domain("presidents")
     domain.delete()
     assert domain.deleted is True
+
+
+def test_get_domain_entities(token, service):
+    client = Client(token, service)
+    domain = client.create_domain("temp domain")
+    client.set_domain(domain)
+
+    client.create({"name": "fake entity 1"})
+    entities = domain.get_entities()
+    assert entities[0].name == "fake entity 1"
+
+    client.create({"name": "fake entity 2", "block": "attr"})
+    entities = domain.get_entities()
+    assert len(entities) == 2
+
+    entities = domain.get_entities({"block": "attr"})
+    assert len(entities) == 1
+    assert entities[0].name == "fake entity 2"
+
+    entities = domain.get_entities({"bad": "attr"})
+    assert len(entities) == 0
+
+    for entity in domain.get_entities():
+        entity.delete()
+    domain.delete()

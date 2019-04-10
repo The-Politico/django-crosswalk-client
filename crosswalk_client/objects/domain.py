@@ -7,6 +7,9 @@ class DomainObject(object):
         domain = self.__client.update_domain(self.slug, update_attrs)
         self.__dict__ = domain.__dict__
 
+    def get_entities(self, block_attrs={}):
+        return self.__client.get_entities(domain=self, block_attrs=block_attrs)
+
     def set_parent(self, parent):
         domain = self.__client.update_domain(
             self.slug, {"parent": parent.slug}
