@@ -1,5 +1,5 @@
 import uuid
-
+import re
 import stringcase
 
 
@@ -39,6 +39,33 @@ class EntityObject(object):
     def remove_superseded_by(self):
         entity = self.__client.supersede_by_id(self.uuid, None)
         self.__dict__ = entity.__dict__
+
+    def attrs(self, attr=None):
+        default_attrs = [
+            "_EntityObject__client",
+            "alias_for",
+            "aliased",
+            "attrs",
+            "delete",
+            "domain",
+            "remove_alias_for",
+            "remove_superseded_by",
+            "set_alias_for",
+            "set_superseded_by",
+            "superseded_by",
+            "update",
+        ]
+
+        if not attr:
+            return [
+                attribute
+                for attribute in dir(self)
+                if attribute not in default_attrs
+                and re.match("^__.*__$", attribute)
+                is None  # exclude built-ins
+            ]
+
+        return getattr(self, attr)
 
     def __init__(self, response, client=None):
         entity = response.pop("entity", {})

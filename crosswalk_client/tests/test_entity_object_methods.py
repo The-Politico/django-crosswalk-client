@@ -1,4 +1,5 @@
 from crosswalk_client import Client
+import pytest
 
 
 def test_setup(token, service):
@@ -15,6 +16,15 @@ def test_entity_update(token, service):
     entity = client.best_match({"name": "George W. Bush"})
     entity.update({"number": 43})
     assert entity.number == 43
+
+
+def test_entity_attrs(token, service):
+    client = Client(token, service, domain="presidents")
+    entity = client.match({"name": "George W. Bush"})
+    assert entity.attrs().sort() == ["uuid", "name", "number"].sort()
+    assert entity.attrs("number") == 43
+    with pytest.raises(AttributeError):
+        entity.attrs("age")
 
 
 def test_entity_set_alias_for(token, service):
